@@ -1,3 +1,8 @@
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const Card = require('../models/Card');
 const { removeBackground } = require('@imgly/background-removal-node');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises;
