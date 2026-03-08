@@ -21,3 +21,4 @@ A professional MERN stack application for creating high-quality news cards with 
 3. Add your MongoDB connection string to `backend/.env`.
 4. Run `npm run dev` in both directories to start the application.
 # card-generator
+# card-generator
