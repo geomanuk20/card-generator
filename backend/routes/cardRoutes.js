@@ -1,10 +1,28 @@
-const express = require('express');
-const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const Card = require('../models/Card');
+const { removeBackground } = require('@imgly/background-removal-node');
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs').promises;
 
-// Configure Multer for image storage
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Helper function to upload to Cloudinary and delete local file
+const uploadToCloudinary = async (localPath, folder = 'cards') => {
+  try {
+    const result = await cloudinary.uploader.upload(localPath, { folder });
+    // Cleanup local file after upload
+    await fs.unlink(localPath).catch(err => console.error('Local cleanup failed:', err));
+    return result.secure_url;
+  } catch (error) {
+    console.error('Cloudinary upload error:', error);
+    throw error;
+  }
+};
+
+// Configure Multer for temporary disk storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -37,9 +55,19 @@ router.post('/', upload.fields([
       subtitle2, subtitle2FontSize, subtitle2FontWeight, subtitle2FontFamily, subtitle2Color, subtitle2Underline,
       subImagePosition, subImageSize, subImageFit, subImageObjectPosition
     } = req.body;
-    const imagePath = req.files['image'] ? req.files['image'][0].path : '';
-    const logoPath = req.files['logo'] ? req.files['logo'][0].path : '';
-    const subImagePath = req.files['subImage'] ? req.files['subImage'][0].path : '';
+    let imagePath = '';
+    let logoPath = '';
+    let subImagePath = '';
+
+    if (req.files['image']) {
+      imagePath = await uploadToCloudinary(req.files['image'][0].path);
+    }
+    if (req.files['logo']) {
+      logoPath = await uploadToCloudinary(req.files['logo'][0].path, 'logos');
+    }
+    if (req.files['subImage']) {
+      subImagePath = await uploadToCloudinary(req.files['subImage'][0].path);
+    }
 
     if (!imagePath) {
       return res.status(400).json({ error: 'Main image is required' });
@@ -157,9 +185,17 @@ router.post('/remove-bg', upload.single('image'), async (req, res) => {
     
     console.log('Background removed successfully:', outputPath);
 
+    // Upload the processed image to Cloudinary
+    const cloudinaryUrl = await uploadToCloudinary(outputPath);
+    
+    // Also delete the original input file if it was different
+    if (inputPath !== outputPath) {
+      await fs.unlink(inputPath).catch(() => {});
+    }
+
     res.json({ 
       success: true, 
-      imagePath: outputPath.replace(/\\/g, '/') // Ensure forward slashes for URL
+      imagePath: cloudinaryUrl // Now returns a permanent URL
     });
   } catch (error) {
     console.error('Background removal failed:', error);

@@ -1,8 +1,25 @@
-const express = require('express');
-const router = express.Router();
-const multer = require('multer');
-const path = require('path');
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs').promises;
 const Settings = require('../models/Settings');
+
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Helper function to upload to Cloudinary and delete local file
+const uploadToCloudinary = async (localPath, folder = 'logos') => {
+  try {
+    const result = await cloudinary.uploader.upload(localPath, { folder });
+    await fs.unlink(localPath).catch(err => console.error('Local cleanup failed:', err));
+    return result.secure_url;
+  } catch (error) {
+    console.error('Cloudinary upload error:', error);
+    throw error;
+  }
+};
 
 // Configure Multer for logo storage
 const storage = multer.diskStorage({
@@ -32,14 +49,11 @@ router.get('/logo', async (req, res) => {
 // @desc    Upload/Update global logo
 router.post('/logo', upload.single('logo'), async (req, res) => {
   try {
-    const logoPath = req.file ? req.file.path : '';
-    if (!logoPath) {
-      return res.status(400).json({ error: 'Logo image is required' });
-    }
+    const cloudinaryUrl = await uploadToCloudinary(logoPath);
 
     const updatedSetting = await Settings.findOneAndUpdate(
       { key: 'global_logo' },
-      { value: logoPath },
+      { value: cloudinaryUrl },
       { upsert: true, returnDocument: 'after' }
     );
 
