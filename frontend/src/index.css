@@ -1,0 +1,398 @@
+:root {
+  --primary-blue: #002d72;
+  --secondary-yellow: #f8f107;
+  --text-white: #ffffff;
+  --text-black: #000000;
+  --bg-dark: #121212;
+  --card-width: 500px; /* Exact size for both preview and final card */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+h1 {
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+/* Form Styles */
+.card-form {
+  background: #1e1e1e;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-size: 0.875rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input-group input {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #2a2a2a;
+  color: white;
+  font-family: inherit;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--secondary-yellow);
+}
+
+button {
+  padding: 1rem;
+  border-radius: 6px;
+  border: none;
+  background: var(--secondary-yellow);
+  color: var(--text-black);
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+button:hover {
+  background: #e6dc00;
+  transform: translateY(-2px);
+}
+
+/* Card Style (Matched to Reference Image) */
+.premium-card {
+  width: var(--card-width);
+  height: var(--card-width); /* Fixed square aspect ratio */
+  background-color: #002d72; /* Exact blue from image */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.card-image-subject {
+  position: absolute;
+  top: 0;
+  object-fit: contain;
+  z-index: 1;
+}
+
+/* Default Right Positioning */
+.premium-card.pos-right .card-image-subject {
+  right: 0;
+  -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%);
+  mask-image: linear-gradient(to left, black 60%, transparent 100%);
+}
+
+/* Optional Left Positioning */
+.premium-card.pos-left .card-image-subject {
+  left: 0;
+  -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
+  mask-image: linear-gradient(to right, black 60%, transparent 100%);
+}
+
+/* Optional Top Positioning */
+.premium-card.pos-top .card-image-subject {
+  top: 0;
+  left: 0;
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+/* Optional Bottom Positioning */
+.premium-card.pos-bottom .card-image-subject {
+  bottom: 0;
+  left: 0;
+  -webkit-mask-image: linear-gradient(to top, black 60%, transparent 100%);
+  mask-image: linear-gradient(to top, black 60%, transparent 100%);
+}
+
+.card-sub-image {
+  position: absolute;
+  pointer-events: none;
+}
+
+.sub-pos-left { left: 0; bottom: 0; }
+.sub-pos-right { right: 0; bottom: 0; }
+.sub-pos-top { top: 0; left: 50%; transform: translateX(-50%); }
+.sub-pos-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+.card-main-layout {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0; /* No gap between header and content */
+}
+
+.card-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Vertical Date Badge - Exact Match with Box */
+.date-badge-v {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+}
+
+.date-badge-v .year {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 0.9;
+  line-height: 1;
+}
+
+.date-badge-v .separator {
+  width: 1px;
+  height: 2.2rem;
+  background-color: rgba(255, 255, 255, 0.4);
+  display: none; /* Hide separator since we are using a box now */
+}
+
+.date-badge-v .day-month {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15); /* Translucent box */
+  backdrop-filter: blur(8px);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  line-height: 1;
+  min-width: 45px;
+}
+
+.date-badge-v .day {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-bottom: 2px;
+}
+
+.date-badge-v .month {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.card-logo-placeholder {
+  text-align: right;
+  color: white;
+}
+
+.card-logo-placeholder img {
+  width: 90px;
+  filter: brightness(0) invert(1); /* Make it white if it's a dark logo */
+}
+
+.card-logo-name {
+  font-size: 0.75rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.uploaded-logo {
+  max-width: 130px;
+  max-height: 70px;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Ensure it stays white/visible on dark blue */
+}
+
+/* Text Content side */
+.card-content-side {
+  width: 50%;
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.premium-card.pos-right .card-content-side {
+  align-self: flex-start;
+  text-align: left;
+}
+
+.premium-card.pos-left .card-content-side {
+  align-self: flex-end;
+  text-align: right;
+  margin-left: auto;
+}
+
+/* Vertical Positioning Content Alignment */
+.premium-card.pos-top .card-main-layout {
+  justify-content: flex-start;
+  gap: 0; /* Removing gap between date badge and headline */
+}
+
+.premium-card.pos-top .card-content-side {
+  width: 100%;
+  text-align: center;
+  align-self: center;
+}
+
+.premium-card.pos-bottom .card-content-side {
+  width: 100%;
+  text-align: center;
+  align-self: center;
+  margin-top: 0;
+}
+
+.card-title-main {
+  color: var(--secondary-yellow);
+  font-size: 2.8rem; /* Larger */
+  font-weight: 900;
+  line-height: 1.4; /* Increased to prevent Malayalam character overlap */
+  margin-top: 0;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.card-subtitle-main {
+  color: var(--text-white);
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+/* Footer Bar */
+.card-footer-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--secondary-yellow); 
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 3;
+}
+
+.card-footer-bar.style-centered {
+  justify-content: center;
+  gap: 2rem;
+}
+
+.card-footer-url {
+  color: var(--text-black);
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.social-icons-placeholder {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.card-footer-bar.style-centered,
+.card-footer-bar.style-icons {
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.card-container-wrapper {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.download-btn-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: var(--secondary-yellow);
+  color: black !important;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 900;
+  text-transform: uppercase;
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 1px;
+}
+
+.card-container-wrapper:hover .download-btn-overlay {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.download-btn-overlay:hover {
+  background: white;
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.download-btn-overlay svg {
+  stroke-width: 3px;
+}
+
+.content-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
+  gap: 4rem; /* Increased gap for download feature */
+  width: 100%;
+  margin-top: 3rem;
+}
