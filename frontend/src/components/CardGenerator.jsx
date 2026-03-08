@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PremiumCard from './PremiumCard';
+const backendURL = ''; // Use relative paths for production
 
 const CardGenerator = ({ onCardGenerated, globalLogo }) => {
   const [formData, setFormData] = useState({
-    title: 'YOUR HEADING HERE',
-    subtitle: 'Your Subtitle Goes Here',
+    title: '',
+    subtitle: '',
     date: new Date().toISOString().split('T')[0],
     imagePosition: 'right',
     imageSize: 70,
@@ -131,8 +132,8 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
 
     try {
       const response = await axios.post('/api/cards/remove-bg', bgData);
-      if (response.data.success) {
-        const imageUrl = `http://localhost:5001/${response.data.imagePath}`;
+      if (response.data.imagePath) {
+        const imageUrl = `/${response.data.imagePath}`;
         const imageRes = await fetch(imageUrl);
         const blob = await imageRes.blob();
         const noBgFile = new File([blob], subImage.name.replace(/\.[^/.]+$/, "") + "-no-bg.png", { type: "image/png" });

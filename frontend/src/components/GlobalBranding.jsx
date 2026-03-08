@@ -24,7 +24,7 @@ const GlobalBranding = ({ currentLogo, onLogoUpdate }) => {
     }
   };
 
-  const logoUrl = currentLogo ? (currentLogo.startsWith('http') ? currentLogo : `http://localhost:5001/${currentLogo}`) : null;
+  const logoUrl = currentLogo ? (currentLogo.startsWith('http') ? currentLogo : `/${currentLogo}`) : null;
 
   return (
     <div className="global-branding" style={{

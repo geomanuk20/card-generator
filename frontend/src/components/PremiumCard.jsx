@@ -109,12 +109,12 @@ const PremiumCard = ({ card, globalLogo, isPreview = false }) => {
   // Handle local vs remote image vs preview blob
   const imageUrl = (image.startsWith('http') || image.startsWith('blob:') || image.startsWith('data:'))
     ? image
-    : `http://localhost:5001/${image}`;
-  const logoUrl = globalLogo ? (globalLogo.startsWith('http') ? globalLogo : `http://localhost:5001/${globalLogo}`) : null;
+    : `/${image}`;
+  const logoUrl = globalLogo ? (globalLogo.startsWith('http') ? globalLogo : `/${globalLogo}`) : null;
   const subImageUrl = subImage ? (
     (subImage.startsWith('http') || subImage.startsWith('blob:') || subImage.startsWith('data:'))
       ? subImage
-      : `http://localhost:5001/${subImage}`
+      : `/${subImage}`
   ) : null;
 
   const handleDownload = async () => {

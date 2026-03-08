@@ -30,9 +30,18 @@ mongoose
 app.use('/api/cards', cardRoutes);
 app.use('/api/settings', settingsRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Card Generator API is running...');
-});
+// Production Static Assets
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '../frontend/dist');
+  app.use(express.static(distPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('Card Generator API is running...');
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
