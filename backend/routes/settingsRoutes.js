@@ -1,3 +1,7 @@
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises;
 const Settings = require('../models/Settings');
@@ -49,7 +53,12 @@ router.get('/logo', async (req, res) => {
 // @desc    Upload/Update global logo
 router.post('/logo', upload.single('logo'), async (req, res) => {
   try {
-    const cloudinaryUrl = await uploadToCloudinary(logoPath);
+    const localPath = req.file ? req.file.path : '';
+    if (!localPath) {
+      return res.status(400).json({ error: 'Logo image is required' });
+    }
+
+    const cloudinaryUrl = await uploadToCloudinary(localPath);
 
     const updatedSetting = await Settings.findOneAndUpdate(
       { key: 'global_logo' },
