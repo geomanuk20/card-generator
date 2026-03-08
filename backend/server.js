@@ -34,8 +34,14 @@ app.use('/api/settings', settingsRoutes);
 if (process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, '../frontend/dist');
   app.use(express.static(distPath));
-  app.get('/:path*', (req, res) => {
-    res.sendFile(path.join(distPath, 'index.html'));
+  
+  // Use a fallback middleware instead of a wildcard route to avoid Express 5 path-to-regexp issues
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api') && !req.path.startsWith('/uploads')) {
+      res.sendFile(path.join(distPath, 'index.html'));
+    } else {
+      next();
+    }
   });
 } else {
   app.get('/', (req, res) => {
