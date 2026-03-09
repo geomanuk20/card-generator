@@ -63,6 +63,8 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     subImageSize: 40,
     subImageFit: 'contain',
     subImageObjectPosition: 'center',
+    subImageX: 10,
+    subImageY: 80,
     // Card Layout & Background
     cardBgColor: '#002d72',
     contentVerticalOffset: -8,
@@ -322,14 +324,27 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     subImageObjectPosition: formData.subImageObjectPosition,
     // Card Layout & Background
     cardBgColor: formData.cardBgColor,
-    contentVerticalOffset: formData.contentVerticalOffset
+    contentVerticalOffset: formData.contentVerticalOffset,
+    subImageX: formData.subImageX,
+    subImageY: formData.subImageY
   };
 
   const handleImagePositionChange = (newPos) => {
     if (activeEditTarget === 'main') {
       setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
     } else {
-      setFormData(prev => ({ ...prev, subImageObjectPosition: newPos }));
+      // If position is free-dragging, parse the percentages
+      if (newPos.includes('%')) {
+        const [x, y] = newPos.split(' ').map(val => parseInt(val));
+        setFormData(prev => ({ 
+          ...prev, 
+          subImagePosition: 'free',
+          subImageX: x,
+          subImageY: y
+        }));
+      } else {
+        setFormData(prev => ({ ...prev, subImageObjectPosition: newPos }));
+      }
     }
   };
 
@@ -952,8 +967,8 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
           
           <div style={{ display: 'flex', gap: '1rem', marginTop: '10px' }}>
             <label style={{ fontSize: '12px', display: 'block' }}>Position</label>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              {['left', 'right', 'top', 'bottom'].map(pos => (
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {['left', 'right', 'top', 'bottom', 'free'].map(pos => (
                 <label key={pos} style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>
                   <input 
                     type="radio" 
