@@ -94,13 +94,48 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     return () => URL.revokeObjectURL(url);
   }, [subImage]);
 
+  const preprocessImage = async (file) => {
+    // If it's already a supported format, just return it
+    const supportedFormats = ['image/png', 'image/jpeg', 'image/webp'];
+    if (supportedFormats.includes(file.type)) {
+      return file;
+    }
+
+    console.log(`Preprocessing image of type ${file.type} to PNG...`);
+    
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Canvas toBlob failed'));
+          }
+        }, 'image/png');
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(img.src);
+        reject(new Error('Image loading failed'));
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   const handleRemoveBackground = async () => {
     if (!image) return alert('Please upload an image first');
     
     setIsProcessingBG(true);
     try {
       console.log('Starting browser-side background removal...');
-      const blob = await removeBackground(image);
+      const processedFile = await preprocessImage(image);
+      const blob = await removeBackground(processedFile);
       
       // Create a new File object to keep names consistent
       const noBgFile = new File([blob], image.name.replace(/\.[^/.]+$/, "") + "-no-bg.png", { type: "image/png" });
@@ -121,7 +156,8 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     setIsProcessingSubBG(true);
     try {
       console.log('Starting browser-side sub-background removal...');
-      const blob = await removeBackground(subImage);
+      const processedFile = await preprocessImage(subImage);
+      const blob = await removeBackground(processedFile);
       
       const noBgFile = new File([blob], subImage.name.replace(/\.[^/.]+$/, "") + "-no-bg.png", { type: "image/png" });
       
