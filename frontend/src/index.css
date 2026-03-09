@@ -4,7 +4,8 @@
   --text-white: #ffffff;
   --text-black: #000000;
   --bg-dark: #121212;
-  --card-width: 500px; /* Exact size for both preview and final card */
+  --card-width: 500px;
+  /* Exact size for both preview and final card */
 }
 
 * {
@@ -100,13 +101,15 @@ button:hover {
 /* Card Style (Matched to Reference Image) */
 .premium-card {
   width: var(--card-width);
-  height: var(--card-width); /* Fixed square aspect ratio */
-  background-color: #002d72; /* Exact blue from image */
+  height: var(--card-width);
+  /* Fixed square aspect ratio */
+  background-color: #002d72;
+  /* Exact blue from image */
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .card-image-subject {
@@ -114,7 +117,8 @@ button:hover {
   top: 0;
   object-fit: contain;
   z-index: 1;
-  pointer-events: none; /* Let clicks pass through it to the container */
+  pointer-events: none;
+  /* Let clicks pass through it to the container */
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -129,11 +133,12 @@ button:hover {
 
 .premium-card.is-preview .card-image-subject,
 .premium-card.is-preview .card-main-layout {
-  pointer-events: none; 
+  pointer-events: none;
 }
 
 .premium-card.is-preview .download-btn-overlay {
-  pointer-events: auto; /* Ensure download button still works */
+  pointer-events: auto;
+  /* Ensure download button still works */
 }
 
 .subject-image-container {
@@ -170,7 +175,7 @@ button:hover {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   pointer-events: auto !important;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .image-edit-trigger:hover {
@@ -243,13 +248,31 @@ button:hover {
 }
 
 .card-sub-image.is-preview-target {
-  pointer-events: auto; /* Allow clicking on sub-image when it is the edit target */
+  pointer-events: auto;
+  /* Allow clicking on sub-image when it is the edit target */
 }
 
-.sub-pos-left { left: 0; bottom: 0; }
-.sub-pos-right { right: 0; bottom: 0; }
-.sub-pos-top { top: 0; left: 50%; transform: translateX(-50%); }
-.sub-pos-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+.sub-pos-left {
+  left: 0;
+  bottom: 0;
+}
+
+.sub-pos-right {
+  right: 0;
+  bottom: 0;
+}
+
+.sub-pos-top {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sub-pos-bottom {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
 .card-main-layout {
   position: relative;
@@ -259,7 +282,8 @@ button:hover {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 0; /* No gap between header and content */
+  gap: 0;
+  /* No gap between header and content */
 }
 
 .card-header-top {
@@ -290,7 +314,8 @@ button:hover {
   width: 1px;
   height: 2.2rem;
   background-color: rgba(255, 255, 255, 0.4);
-  display: none; /* Hide separator since we are using a box now */
+  display: none;
+  /* Hide separator since we are using a box now */
 }
 
 .date-badge-v .day-month {
@@ -298,7 +323,8 @@ button:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.15); /* Translucent box */
+  background: rgba(255, 255, 255, 0.15);
+  /* Translucent box */
   backdrop-filter: blur(8px);
   padding: 0.4rem 0.6rem;
   border-radius: 6px;
@@ -329,8 +355,10 @@ button:hover {
 }
 
 .card-logo-placeholder img {
+  margin-top: 15px; /* Use positive value to move it DOWN away from the top edge */
   width: 120px;
-  filter: brightness(0) invert(1); /* Make it white if it's a dark logo */
+  filter: brightness(0) invert(1);
+  /* Make it white if it's a dark logo */
 }
 
 .card-logo-text {
@@ -359,7 +387,8 @@ button:hover {
   max-width: 180px;
   max-height: 100px;
   object-fit: contain;
-  filter: brightness(0) invert(1); /* Ensure it stays white/visible on dark blue */
+  filter: brightness(0) invert(1);
+  /* Ensure it stays white/visible on dark blue */
 }
 
 /* Text Content side */
@@ -384,7 +413,8 @@ button:hover {
 /* Vertical Positioning Content Alignment */
 .premium-card.pos-top .card-main-layout {
   justify-content: flex-start;
-  gap: 0; /* Removing gap between date badge and headline */
+  gap: 0;
+  /* Removing gap between date badge and headline */
 }
 
 .premium-card.pos-top .card-content-side {
@@ -402,20 +432,22 @@ button:hover {
 
 .card-title-main {
   color: var(--secondary-yellow);
-  font-size: 2.8rem; /* Larger */
+  font-size: 2.8rem;
+  /* Larger */
   font-weight: 900;
-  line-height: 1.4; /* Increased to prevent Malayalam character overlap */
+  line-height: 1.4;
+  /* Increased to prevent Malayalam character overlap */
   margin-top: 0;
   margin-bottom: 0;
   text-transform: uppercase;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .card-subtitle-main {
   color: var(--text-white);
   font-size: 1.25rem;
   font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 /* Footer Bar */
@@ -424,7 +456,7 @@ button:hover {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: var(--secondary-yellow); 
+  background: var(--secondary-yellow);
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: space-between;
@@ -484,7 +516,7 @@ button:hover {
   display: flex !important;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   cursor: pointer;
   z-index: 10;
   opacity: 0;
@@ -511,7 +543,8 @@ button:hover {
 .content-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
-  gap: 4rem; /* Increased gap for download feature */
+  gap: 4rem;
+  /* Increased gap for download feature */
   width: 100%;
   margin-top: 3rem;
 }
