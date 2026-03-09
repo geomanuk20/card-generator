@@ -114,7 +114,11 @@ button:hover {
 }
 
 .premium-card.is-preview {
-  cursor: crosshair;
+  cursor: grab;
+}
+
+.premium-card.is-preview.is-dragging {
+  cursor: grabbing;
 }
 
 .premium-card.is-preview .card-image-subject,

@@ -199,7 +199,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   return (
     <div className="card-container-wrapper">
       <div 
-        className={`premium-card pos-${imagePosition} ${isPreview ? 'is-preview' : ''}`} 
+        className={`premium-card pos-${imagePosition} ${isPreview ? 'is-preview' : ''} ${isDragging ? 'is-dragging' : ''}`} 
         ref={cardRef}
         onMouseDown={handleMouseDown}
       >
@@ -208,10 +208,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
           src={imageUrl}
           alt={title}
           className="card-image-subject"
-          style={{ 
-            ...imageDynamicStyle, 
-            cursor: isPreview ? (isDragging ? 'grabbing' : 'grab') : 'default' 
-          }}
+          style={imageDynamicStyle}
           crossOrigin="anonymous"
         />
 
