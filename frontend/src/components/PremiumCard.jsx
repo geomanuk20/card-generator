@@ -271,12 +271,13 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
         {/* Main UI Overlay */}
         <div className="card-main-layout">
           <div className="card-header-top">
-            {/* Horizontal Date Badge */}
-            <div className="date-badge-h">
-              <div className="day-month-year" style={{ background: dateBgColor, padding: '4px 8px', borderRadius: '4px' }}>
+            {/* Vertical Date Badge */}
+            <div className="date-badge-v" style={{ background: 'none' }}>
+              <span className="year">{year}</span>
+              <div className="separator"></div>
+              <div className="day-month" style={{ background: dateBgColor, padding: '4px', borderRadius: '4px' }}>
                 <span className="day">{day}</span>
                 <span className="month">{month}</span>
-                <span className="year">{year}</span>
               </div>
             </div>
 
