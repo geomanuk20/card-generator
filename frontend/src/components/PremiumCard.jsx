@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 
-const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange }) => {
+const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange, activeEditTarget = 'main' }) => {
   const cardRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -21,7 +21,8 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   const handleMouseMove = (e) => {
     if (!isDragging || !isPreview || !cardRef.current) return;
 
-    const imgElement = cardRef.current.querySelector('.card-image-subject');
+    const targetSelector = activeEditTarget === 'main' ? '.card-image-subject' : '.card-sub-image';
+    const imgElement = cardRef.current.querySelector(targetSelector);
     if (!imgElement) return;
 
     const rect = imgElement.getBoundingClientRect();

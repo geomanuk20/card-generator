@@ -69,6 +69,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
   const [isProcessingBG, setIsProcessingBG] = useState(false);
   const [isProcessingSubBG, setIsProcessingSubBG] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [activeEditTarget, setActiveEditTarget] = useState('main'); // 'main' or 'sub'
 
   // Update preview URL when image changes
   useEffect(() => {
@@ -297,7 +298,11 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
   };
 
   const handleImagePositionChange = (newPos) => {
-    setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
+    if (activeEditTarget === 'main') {
+      setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
+    } else {
+      setFormData(prev => ({ ...prev, subImageObjectPosition: newPos }));
+    }
   };
 
   return (
@@ -939,7 +944,41 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
         top: '20px',
         alignSelf: 'flex-start'
       }}>
-        <h3 style={{ marginBottom: '1.5rem', opacity: 0.8 }}>Live Preview</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <h3 style={{ margin: 0, opacity: 0.8 }}>Live Preview</h3>
+          <div className="edit-target-toggle" style={{ display: 'flex', gap: '5px', background: '#252525', padding: '4px', borderRadius: '8px' }}>
+            <button 
+              type="button"
+              onClick={() => setActiveEditTarget('main')}
+              style={{ 
+                fontSize: '11px', 
+                padding: '4px 10px', 
+                background: activeEditTarget === 'main' ? '#2ba5bc' : 'transparent',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Main Image
+            </button>
+            <button 
+              type="button"
+              onClick={() => setActiveEditTarget('sub')}
+              style={{ 
+                fontSize: '11px', 
+                padding: '4px 10px', 
+                background: activeEditTarget === 'sub' ? '#2ba5bc' : 'transparent',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Sub Image
+            </button>
+          </div>
+        </div>
         <div className="preview-wrapper" style={{ 
           filter: 'drop-shadow(0 20px 50px rgba(0,0,0,0.5))'
         }}>
@@ -948,6 +987,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
             globalLogo={globalLogo} 
             isPreview={true} 
             onImagePositionChange={handleImagePositionChange}
+            activeEditTarget={activeEditTarget}
           />
         </div>
       </div>
