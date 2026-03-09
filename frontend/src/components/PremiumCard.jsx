@@ -194,7 +194,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
         cacheBust: true,
         pixelRatio: 2,
         filter: (node) => {
-          // Exclude the download button and edit triggers from the final image
+          // Exclude markers and UI from capture
           if (node.classList && (
             node.classList.contains('download-btn-overlay') || 
             node.classList.contains('image-edit-trigger')

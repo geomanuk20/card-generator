@@ -327,7 +327,7 @@ button:hover {
 }
 
 .card-logo-placeholder img {
-  width: 90px;
+  width: 120px;
   filter: brightness(0) invert(1); /* Make it white if it's a dark logo */
 }
 
@@ -338,8 +338,8 @@ button:hover {
 }
 
 .uploaded-logo {
-  max-width: 130px;
-  max-height: 70px;
+  max-width: 180px;
+  max-height: 100px;
   object-fit: contain;
   filter: brightness(0) invert(1); /* Ensure it stays white/visible on dark blue */
 }
