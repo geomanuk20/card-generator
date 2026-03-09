@@ -552,6 +552,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
               <label style={{ fontSize: '10px' }}>Family</label>
               <select value={formData.title2FontFamily} onChange={(e) => setFormData({...formData, title2FontFamily: e.target.value})} style={{ width: '100%', fontSize: '11px' }}>
                 <option value="Anek Malayalam">Anek (MAL)</option>
+                <option value="Anek Malayalam Condensed">Anek Condensed (MAL)</option>
                 <option value="Inter">Inter</option>
                 <option value="Roboto">Roboto</option>
                 <option value="Baloo Chettan 2">Baloo (MAL)</option>
@@ -599,6 +600,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
               <label style={{ fontSize: '10px' }}>Family</label>
               <select value={formData.subtitle2FontFamily} onChange={(e) => setFormData({...formData, subtitle2FontFamily: e.target.value})} style={{ width: '100%', fontSize: '11px' }}>
                 <option value="Anek Malayalam">Anek (MAL)</option>
+                <option value="Anek Malayalam Condensed">Anek Condensed (MAL)</option>
                 <option value="Inter">Inter</option>
                 <option value="Roboto">Roboto</option>
                 <option value="Baloo Chettan 2">Baloo (MAL)</option>
@@ -667,6 +669,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
               <label style={{ fontSize: '10px' }}>Family</label>
               <select value={formData.extraTextFontFamily} onChange={(e) => setFormData({...formData, extraTextFontFamily: e.target.value})} style={{ width: '100%', fontSize: '11px' }}>
                 <option value="Anek Malayalam">Anek (MAL)</option>
+                <option value="Anek Malayalam Condensed">Anek Condensed (MAL)</option>
                 <option value="Inter">Inter</option>
                 <option value="Roboto">Roboto</option>
                 <option value="Baloo Chettan 2">Baloo (MAL)</option>
