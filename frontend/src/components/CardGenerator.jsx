@@ -13,8 +13,6 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     imageSize: 70,
     imageFit: 'cover',
     imageObjectPosition: 'center',
-    imageX: 50,
-    imageY: 50,
     headlineWidth: 50,
     footerStyle: 'centered',
     footerText: 'www.whiteswantvnews.com',
@@ -267,8 +265,6 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     imageSize: formData.imageSize,
     imageFit: formData.imageFit,
     imageObjectPosition: formData.imageObjectPosition,
-    imageX: formData.imageX,
-    imageY: formData.imageY,
     headlineWidth: formData.headlineWidth,
     footerStyle: formData.footerStyle,
     footerText: formData.footerText,
@@ -335,17 +331,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
 
   const handleImagePositionChange = (newPos) => {
     if (activeEditTarget === 'main') {
-      if (newPos.includes('%')) {
-        const [x, y] = newPos.split(' ').map(val => parseInt(val));
-        setFormData(prev => ({ 
-          ...prev, 
-          imagePosition: 'free',
-          imageX: x, 
-          imageY: y 
-        }));
-      } else {
-        setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
-      }
+      setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
     } else {
       // If position is free-dragging, parse the percentages
       if (newPos.includes('%')) {
@@ -863,15 +849,6 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
                 checked={formData.imagePosition === 'bottom'}
                 onChange={(e) => setFormData({ ...formData, imagePosition: e.target.value })}
               /> Bottom
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.9rem' }}>
-              <input 
-                type="radio" 
-                name="position" 
-                value="free" 
-                checked={formData.imagePosition === 'free'}
-                onChange={(e) => setFormData({ ...formData, imagePosition: e.target.value })}
-              /> Free
             </label>
           </div>
           <div style={{ marginTop: '10px', display: 'flex', gap: '20px', alignItems: 'flex-end' }}>

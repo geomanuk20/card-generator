@@ -210,11 +210,6 @@ button:hover {
   box-shadow: inset 0 0 30px rgba(248, 241, 7, 0.3);
 }
 
-/* Hide edit indicators during export */
-.premium-card.exporting .active-edit::after {
-  display: none !important;
-}
-
 /* Default Right Positioning */
 .premium-card.pos-right .card-image-subject {
   right: 0;

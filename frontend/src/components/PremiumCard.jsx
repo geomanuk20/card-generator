@@ -22,25 +22,15 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     if (!isDragging || !isPreview || !cardRef.current) return;
 
     if (activeEditTarget === 'main') {
-      if (imagePosition === 'free') {
-        const cardRect = cardRef.current.getBoundingClientRect();
-        let xPercent = ((e.clientX - cardRect.left) / cardRect.width) * 100;
-        let yPercent = ((e.clientY - cardRect.top) / cardRect.height) * 100;
-        xPercent = Math.max(0, Math.min(100, xPercent));
-        yPercent = Math.max(0, Math.min(100, yPercent));
-        const coordPos = `${Math.round(xPercent)}% ${Math.round(yPercent)}%`;
-        if (onImagePositionChange) onImagePositionChange(coordPos);
-      } else {
-        const imgElement = cardRef.current.querySelector('.card-image-subject');
-        if (!imgElement) return;
-        const rect = imgElement.getBoundingClientRect();
-        let xPercent = ((e.clientX - rect.left) / rect.width) * 100;
-        let yPercent = ((e.clientY - rect.top) / rect.height) * 100;
-        xPercent = Math.max(0, Math.min(100, xPercent));
-        yPercent = Math.max(0, Math.min(100, yPercent));
-        const newPos = `${Math.round(xPercent)}% ${Math.round(yPercent)}%`;
-        if (onImagePositionChange) onImagePositionChange(newPos);
-      }
+      const imgElement = cardRef.current.querySelector('.card-image-subject');
+      if (!imgElement) return;
+      const rect = imgElement.getBoundingClientRect();
+      let xPercent = ((e.clientX - rect.left) / rect.width) * 100;
+      let yPercent = ((e.clientY - rect.top) / rect.height) * 100;
+      xPercent = Math.max(0, Math.min(100, xPercent));
+      yPercent = Math.max(0, Math.min(100, yPercent));
+      const newPos = `${Math.round(xPercent)}% ${Math.round(yPercent)}%`;
+      if (onImagePositionChange) onImagePositionChange(newPos);
     } else {
       // For sub-image, we move the container relative to the WHOLE CARD
       const cardRect = cardRef.current.getBoundingClientRect();
@@ -99,8 +89,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     subImageFit = 'contain', subImageObjectPosition = 'center',
     cardBgColor = '#002d72',
     contentVerticalOffset = -8,
-    subImageX = 10, subImageY = 80,
-    imageX = 50, imageY = 50
+    subImageX = 10, subImageY = 80
   } = card;
 
   // Dynamic image styling based on size and position
@@ -108,18 +97,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     objectFit: imageFit, // Cover (fill height) or Contain
     objectPosition: imageObjectPosition
   };
-  const subjectImageContainerStyle = {
-    position: imagePosition === 'free' ? 'absolute' : 'relative',
-    zIndex: 1
-  };
-
-  if (imagePosition === 'free') {
-    subjectImageContainerStyle.left = `${imageX}%`;
-    subjectImageContainerStyle.top = `${imageY}%`;
-    subjectImageContainerStyle.transform = 'translate(-50%, -50%)';
-    subjectImageContainerStyle.width = `${imageSize}%`;
-    subjectImageContainerStyle.height = 'auto';
-  } else if (imagePosition === 'left' || imagePosition === 'right') {
+  if (imagePosition === 'left' || imagePosition === 'right') {
     imageDynamicStyle.width = `${imageSize}%`;
     imageDynamicStyle.height = '100%';
   } else {
@@ -224,9 +202,6 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     if (cardRef.current === null) return;
 
     try {
-      // Add exporting class to hide UI elements like the yellow border
-      cardRef.current.classList.add('exporting');
-      
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
@@ -241,9 +216,6 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
           return true;
         }
       });
-      
-      // Remove exporting class after capture
-      cardRef.current.classList.remove('exporting');
 
       const link = document.createElement('a');
       link.download = `news-card-${Date.now()}.png`;
@@ -263,10 +235,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
         style={{ backgroundColor: cardBgColor }}
       >
         {/* Uploaded Subject Image Wrapper */}
-        <div 
-          className={`subject-image-container ${isPreview && activeEditTarget === 'main' ? 'active-edit' : ''}`}
-          style={subjectImageContainerStyle}
-        >
+        <div className={`subject-image-container ${isPreview && activeEditTarget === 'main' ? 'active-edit' : ''}`}>
           <img
             src={imageUrl}
             alt={title}
