@@ -218,7 +218,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
           <img
             src={subImageUrl}
             alt="Sub Subject"
-            className={`card-sub-image sub-pos-${subImagePosition}`}
+            className={`card-sub-image sub-pos-${subImagePosition} ${isPreview && activeEditTarget === 'sub' ? 'is-preview-target' : ''}`}
             style={subImageDynamicStyle}
             crossOrigin="anonymous"
           />
