@@ -355,7 +355,7 @@ button:hover {
 }
 
 .card-logo-placeholder img {
-  margin-top: 15px; /* Use positive value to move it DOWN away from the top edge */
+  margin-top: -35px;
   width: 120px;
   filter: brightness(0) invert(1);
   /* Make it white if it's a dark logo */
