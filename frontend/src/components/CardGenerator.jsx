@@ -37,6 +37,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     extraText: '',
     extraTextShow: false,
     extraTextBgColor: '#1e4b8f',
+    extraTextWidth: 100,
     extraTextFontSize: 0.9,
     extraTextFontWeight: 'bold',
     extraTextFontFamily: 'Anek Malayalam',
@@ -190,6 +191,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     data.append('extraText', formData.extraText);
     data.append('extraTextShow', formData.extraTextShow);
     data.append('extraTextBgColor', formData.extraTextBgColor);
+    data.append('extraTextWidth', formData.extraTextWidth);
     data.append('extraTextFontSize', `${formData.extraTextFontSize}rem`);
     data.append('extraTextFontWeight', formData.extraTextFontWeight);
     data.append('extraTextFontFamily', formData.extraTextFontFamily);
@@ -266,6 +268,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     extraText: formData.extraText,
     extraTextShow: formData.extraTextShow,
     extraTextBgColor: formData.extraTextBgColor,
+    extraTextWidth: formData.extraTextWidth,
     extraTextStyle: {
       fontSize: `${formData.extraTextFontSize}rem`,
       fontWeight: formData.extraTextFontWeight,

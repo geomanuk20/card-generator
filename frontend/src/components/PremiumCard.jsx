@@ -76,6 +76,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     extraText = '',
     extraTextShow = false,
     extraTextBgColor = '#1e4b8f',
+    extraTextWidth = 100,
     subtitle2 = '',
     title2 = '',
     headlineWidth = 50,
@@ -342,7 +343,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
                   padding: '6px 16px',
                   borderRadius: '30px',
                   marginTop: '15px',
-                  width: 'fit-content',
+                  width: `${extraTextWidth}%`,
                   display: 'inline-block'
                 }}
               >

@@ -30,6 +30,7 @@ const cardSchema = new mongoose.Schema({
   extraText: { type: String, default: '' },
   extraTextShow: { type: Boolean, default: false },
   extraTextBgColor: { type: String, default: '#1e4b8f' },
+  extraTextWidth: { type: Number, default: 100 },
   subtitle2: { type: String, default: '' },
   title2: { type: String, default: '' },
   logo: { type: String },
