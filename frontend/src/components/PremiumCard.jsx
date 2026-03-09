@@ -8,6 +8,8 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
 
   const handleMouseDown = (e) => {
     if (!isPreview) return;
+    if (e.target.closest('button')) return; // Ignore drag if clicking on the download button or other buttons
+    
     setIsDragging(true);
     
     // Trigger an immediate update on click
@@ -196,7 +198,11 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
 
   return (
     <div className="card-container-wrapper">
-      <div className={`premium-card pos-${imagePosition}`} ref={cardRef}>
+      <div 
+        className={`premium-card pos-${imagePosition} ${isPreview ? 'is-preview' : ''}`} 
+        ref={cardRef}
+        onMouseDown={handleMouseDown}
+      >
         {/* Uploaded Subject Image */}
         <img
           src={imageUrl}
@@ -207,7 +213,6 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
             cursor: isPreview ? (isDragging ? 'grabbing' : 'grab') : 'default' 
           }}
           crossOrigin="anonymous"
-          onMouseDown={handleMouseDown}
         />
 
         {/* Sub-Subject Image */}

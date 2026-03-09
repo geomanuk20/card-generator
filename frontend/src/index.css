@@ -108,14 +108,22 @@ button:hover {
   top: 0;
   object-fit: contain;
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: none; /* Let clicks pass through it to the container */
   user-select: none;
   -webkit-user-drag: none;
-  cursor: grab;
 }
 
-.card-image-subject:active {
-  cursor: grabbing;
+.premium-card.is-preview {
+  cursor: crosshair;
+}
+
+.premium-card.is-preview .card-image-subject,
+.premium-card.is-preview .card-main-layout {
+  pointer-events: none; 
+}
+
+.premium-card.is-preview .download-btn-overlay {
+  pointer-events: auto; /* Ensure download button still works */
 }
 
 /* Default Right Positioning */
