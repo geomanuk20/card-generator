@@ -301,27 +301,37 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
             {title2 && <h2 className={`card-title-main ${getFontClass(title2Style.fontFamily)}`} style={{ ...title2InlineStyle, marginTop: '0' }}>{title2}</h2>}
 
             {subtitle && (
-              subtitleShowBox ? (
-                <div
-                  className="card-subtitle-box"
-                  style={{
-                    background: subtitleBoxColor,
-                    padding: '4px 12px',
-                    borderRadius: '20px',
-                    display: 'inline-block',
-                    width: `${subtitleBoxWidth}%`,
-                    marginTop: '5px'
-                  }}
-                >
-                  <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={{ ...subtitleInlineStyle, marginTop: 0 }}>{subtitle}</p>
-                </div>
-              ) : (
-                <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={subtitleInlineStyle}>{subtitle}</p>
-              )
+              <div 
+                className="subtitle-wrapper" 
+                style={{ width: `${subtitleBoxWidth}%` }}
+              >
+                {subtitleShowBox ? (
+                  <div
+                    className="card-subtitle-box"
+                    style={{
+                      background: subtitleBoxColor,
+                      padding: '4px 12px',
+                      borderRadius: '20px',
+                      display: 'inline-block',
+                      width: '100%',
+                      marginTop: '5px'
+                    }}
+                  >
+                    <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={{ ...subtitleInlineStyle, marginTop: 0 }}>{subtitle}</p>
+                  </div>
+                ) : (
+                  <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={{ ...subtitleInlineStyle, width: '100%' }}>{subtitle}</p>
+                )}
+              </div>
             )}
 
             {subtitle2 && (
-              <p className={`card-subtitle-2 ${getFontClass(subtitle2Style.fontFamily)}`} style={{ ...subtitle2InlineStyle, marginTop: '8px' }}>{subtitle2}</p>
+              <div 
+                className="subtitle2-wrapper" 
+                style={{ width: `${subtitleBoxWidth}%`, marginTop: '8px' }}
+              >
+                <p className={`card-subtitle-2 ${getFontClass(subtitle2Style.fontFamily)}`} style={{ ...subtitle2InlineStyle, width: '100%', marginTop: 0 }}>{subtitle2}</p>
+              </div>
             )}
 
             {extraTextShow && extraText && (
