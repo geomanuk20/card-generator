@@ -5,20 +5,6 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   const cardRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-  const [currentOffset, setCurrentOffset] = useState({ x: 50, y: 50 }); // Percentage based
-
-  useEffect(() => {
-    if (card && card.imageObjectPosition) {
-      const parts = card.imageObjectPosition.split(' ');
-      if (parts.length === 2) {
-        const x = parseInt(parts[0]) || 50;
-        const y = parseInt(parts[1]) || 50;
-        setCurrentOffset({ x, y });
-      } else if (card.imageObjectPosition === 'center') {
-        setCurrentOffset({ x: 50, y: 50 });
-      }
-    }
-  }, [card.imageObjectPosition]);
 
   const handleMouseDown = (e) => {
     if (!isPreview) return;
