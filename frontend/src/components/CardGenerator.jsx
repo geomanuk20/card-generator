@@ -63,8 +63,6 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     subImageSize: 40,
     subImageFit: 'contain',
     subImageObjectPosition: 'center',
-    subImageX: 10,
-    subImageY: 80,
     // Card Layout & Background
     cardBgColor: '#002d72',
     contentVerticalOffset: -8,
@@ -77,6 +75,38 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
   const [isProcessingSubBG, setIsProcessingSubBG] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeEditTarget, setActiveEditTarget] = useState('main'); // 'main' or 'sub'
+
+  // Load initial state from localStorage if available
+  useEffect(() => {
+    const savedData = localStorage.getItem('cardGenerator_formData');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        setFormData(prev => ({
+          ...prev,
+          ...parsed,
+          // Always reset transient data
+          date: new Date().toISOString().split('T')[0],
+          title: '',
+          subtitle: '',
+          subtitle2: '',
+          title2: '',
+          extraText: ''
+        }));
+      } catch (e) {
+        console.error('Error loading saved card data:', e);
+      }
+    }
+  }, []);
+
+  // Save state to localStorage whenever non-content settings change
+  useEffect(() => {
+    const { 
+      title, subtitle, subtitle2, title2, extraText, date, 
+      ...settingsToSave 
+    } = formData;
+    localStorage.setItem('cardGenerator_formData', JSON.stringify(settingsToSave));
+  }, [formData]);
 
   // Update preview URL when image changes
   useEffect(() => {
@@ -324,27 +354,14 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     subImageObjectPosition: formData.subImageObjectPosition,
     // Card Layout & Background
     cardBgColor: formData.cardBgColor,
-    contentVerticalOffset: formData.contentVerticalOffset,
-    subImageX: formData.subImageX,
-    subImageY: formData.subImageY
+    contentVerticalOffset: formData.contentVerticalOffset
   };
 
   const handleImagePositionChange = (newPos) => {
     if (activeEditTarget === 'main') {
       setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
     } else {
-      // If position is free-dragging, parse the percentages
-      if (newPos.includes('%')) {
-        const [x, y] = newPos.split(' ').map(val => parseInt(val));
-        setFormData(prev => ({ 
-          ...prev, 
-          subImagePosition: 'free',
-          subImageX: x,
-          subImageY: y
-        }));
-      } else {
-        setFormData(prev => ({ ...prev, subImageObjectPosition: newPos }));
-      }
+      setFormData(prev => ({ ...prev, subImageObjectPosition: newPos }));
     }
   };
 
@@ -967,8 +984,8 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
           
           <div style={{ display: 'flex', gap: '1rem', marginTop: '10px' }}>
             <label style={{ fontSize: '12px', display: 'block' }}>Position</label>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              {['left', 'right', 'top', 'bottom', 'free'].map(pos => (
+            <div style={{ display: 'flex', gap: '10px' }}>
+              {['left', 'right', 'top', 'bottom'].map(pos => (
                 <label key={pos} style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>
                   <input 
                     type="radio" 

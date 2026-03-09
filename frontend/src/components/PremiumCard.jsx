@@ -21,25 +21,23 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   const handleMouseMove = (e) => {
     if (!isDragging || !isPreview || !cardRef.current) return;
 
-    if (activeEditTarget === 'main') {
-      const imgElement = cardRef.current.querySelector('.card-image-subject');
-      if (!imgElement) return;
-      const rect = imgElement.getBoundingClientRect();
-      let xPercent = ((e.clientX - rect.left) / rect.width) * 100;
-      let yPercent = ((e.clientY - rect.top) / rect.height) * 100;
-      xPercent = Math.max(0, Math.min(100, xPercent));
-      yPercent = Math.max(0, Math.min(100, yPercent));
-      const newPos = `${Math.round(xPercent)}% ${Math.round(yPercent)}%`;
-      if (onImagePositionChange) onImagePositionChange(newPos);
-    } else {
-      // For sub-image, we move the container relative to the WHOLE CARD
-      const cardRect = cardRef.current.getBoundingClientRect();
-      let xPercent = ((e.clientX - cardRect.left) / cardRect.width) * 100;
-      let yPercent = ((e.clientY - cardRect.top) / cardRect.height) * 100;
-      xPercent = Math.max(0, Math.min(100, xPercent));
-      yPercent = Math.max(0, Math.min(100, yPercent));
-      const coordPos = `${Math.round(xPercent)}% ${Math.round(yPercent)}%`;
-      if (onImagePositionChange) onImagePositionChange(coordPos);
+    const targetSelector = activeEditTarget === 'main' ? '.card-image-subject' : '.card-sub-image';
+    const imgElement = cardRef.current.querySelector(targetSelector);
+    if (!imgElement) return;
+
+    const rect = imgElement.getBoundingClientRect();
+    
+    // Calculate percentage based on mouse position within the element
+    let xPercent = ((e.clientX - rect.left) / rect.width) * 100;
+    let yPercent = ((e.clientY - rect.top) / rect.height) * 100;
+
+    // Clamp values between 0 and 100
+    xPercent = Math.max(0, Math.min(100, xPercent));
+    yPercent = Math.max(0, Math.min(100, yPercent));
+
+    const newPos = `${Math.round(xPercent)}% ${Math.round(yPercent)}%`;
+    if (onImagePositionChange) {
+      onImagePositionChange(newPos);
     }
   };
 
@@ -88,8 +86,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     subImage, subImagePosition = 'left', subImageSize = 40,
     subImageFit = 'contain', subImageObjectPosition = 'center',
     cardBgColor = '#002d72',
-    contentVerticalOffset = -8,
-    subImageX = 10, subImageY = 80
+    contentVerticalOffset = -8
   } = card;
 
   // Dynamic image styling based on size and position
@@ -113,17 +110,10 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   };
 
   const subImageContainerStyle = {
-    zIndex: 3,
-    position: subImagePosition === 'free' ? 'absolute' : 'relative',
+    zIndex: 3
   };
 
-  if (subImagePosition === 'free') {
-    subImageContainerStyle.left = `${subImageX}%`;
-    subImageContainerStyle.top = `${subImageY}%`;
-    subImageContainerStyle.transform = 'translate(-50%, -50%)';
-    subImageContainerStyle.width = `${subImageSize}%`;
-    subImageContainerStyle.height = 'auto'; // Width-based sizing for free drag
-  } else if (subImagePosition === 'left' || subImagePosition === 'right') {
+  if (subImagePosition === 'left' || subImagePosition === 'right') {
     subImageContainerStyle.width = `${subImageSize}%`;
     subImageContainerStyle.height = '100%';
   } else {
