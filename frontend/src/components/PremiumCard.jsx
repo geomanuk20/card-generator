@@ -107,7 +107,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false }) => {
   const year = dateObj.getFullYear();
 
   // Handle local vs remote image vs preview blob
-  const imageUrl = (image.startsWith('http') || image.startsWith('blob:') || image.startsWith('data:'))
+  const imageUrl = (image && (image.startsWith('http') || image.startsWith('blob:') || image.startsWith('data:')))
     ? image
     : `/${image}`;
   const logoUrl = globalLogo ? (globalLogo.startsWith('http') ? globalLogo : `/${globalLogo}`) : null;
