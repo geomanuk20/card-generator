@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 
-const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange, activeEditTarget = 'main', onTargetSelect }) => {
+const PremiumCard = ({ card, brandingSettings, isPreview = false, onImagePositionChange, activeEditTarget = 'main', onTargetSelect }) => {
   const cardRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -178,7 +178,8 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     ? image
     : (image ? `/${image}` : 'https://via.placeholder.com/800x600?text=Upload+Image');
 
-  const logoUrl = globalLogo ? (safeStartsWith(globalLogo, 'http') ? globalLogo : `/${globalLogo}`) : null;
+  const { value: logoValue, logoSize = 80, logoBgColor = '#002d72' } = brandingSettings || {};
+  const logoUrl = logoValue ? (safeStartsWith(logoValue, 'http') ? logoValue : `/${logoValue}`) : null;
   
   const subImageUrl = subImage ? (
     (safeStartsWith(subImage, 'http') || safeStartsWith(subImage, 'blob:') || safeStartsWith(subImage, 'data:'))
@@ -279,13 +280,14 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
             </div>
 
             {/* Logo Section */}
-            <div className="card-logo-placeholder">
+            <div className="card-logo-placeholder" style={{ background: logoBgColor, borderRadius: '4px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {logoUrl ? (
                 <img
                   src={logoUrl}
                   alt="Logo"
                   className="uploaded-logo"
                   crossOrigin="anonymous"
+                  style={{ maxWidth: `${logoSize}%`, maxHeight: `${logoSize}%`, objectFit: 'contain' }}
                 />
               ) : (
                 <>

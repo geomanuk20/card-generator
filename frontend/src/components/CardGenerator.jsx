@@ -4,7 +4,7 @@ import { removeBackground } from '@imgly/background-removal';
 import PremiumCard from './PremiumCard';
 const backendURL = ''; // Use relative paths for production
 
-const CardGenerator = ({ onCardGenerated, globalLogo }) => {
+const CardGenerator = ({ onCardGenerated, brandingSettings }) => {
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
@@ -1022,7 +1022,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
         }}>
           <PremiumCard 
             card={previewCardData} 
-            globalLogo={globalLogo} 
+            brandingSettings={brandingSettings} 
             isPreview={true} 
             onImagePositionChange={handleImagePositionChange}
             activeEditTarget={activeEditTarget}

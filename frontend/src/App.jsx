@@ -6,7 +6,7 @@ import GlobalBranding from './components/GlobalBranding';
 
 const App = () => {
   const [cards, setCards] = useState([]);
-  const [globalLogo, setGlobalLogo] = useState('');
+  const [brandingSettings, setBrandingSettings] = useState({ value: '', logoSize: 80, logoBgColor: '#002d72' });
 
   const fetchCards = async () => {
     try {
@@ -17,10 +17,12 @@ const App = () => {
     }
   };
 
-  const fetchGlobalLogo = async () => {
+  const fetchBrandingSettings = async () => {
     try {
       const response = await axios.get('/api/settings/logo');
-      setGlobalLogo(response.data.value);
+      if (response.data) {
+        setBrandingSettings(response.data);
+      }
     } catch (error) {
       console.error('Error fetching global logo:', error);
     }
@@ -28,7 +30,7 @@ const App = () => {
 
   useEffect(() => {
     fetchCards();
-    fetchGlobalLogo();
+    fetchBrandingSettings();
   }, []);
 
   const handleCardGenerated = (newCard) => {
@@ -40,13 +42,13 @@ const App = () => {
       <h1>Card Generator</h1>
 
       <GlobalBranding
-        currentLogo={globalLogo}
-        onLogoUpdate={(newLogo) => setGlobalLogo(newLogo)}
+        brandingSettings={brandingSettings}
+        onUpdate={(updated) => setBrandingSettings(updated)}
       />
 
       <CardGenerator
         onCardGenerated={handleCardGenerated}
-        globalLogo={globalLogo}
+        brandingSettings={brandingSettings}
       />
 
       <div className="content-list">
@@ -54,7 +56,7 @@ const App = () => {
           <PremiumCard
             key={card._id}
             card={card}
-            globalLogo={globalLogo}
+            brandingSettings={brandingSettings}
           />
         ))}
       </div>

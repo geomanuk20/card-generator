@@ -48,17 +48,45 @@ router.get('/logo', async (req, res) => {
 // @desc    Upload/Update global logo
 router.post('/logo', upload.single('logo'), async (req, res) => {
   try {
+    const { logoSize, logoBgColor } = req.body;
     const localPath = req.file ? req.file.path : '';
-    if (!localPath) {
-      return res.status(400).json({ error: 'Logo image is required' });
+    
+    let updateData = {};
+    if (logoSize) updateData.logoSize = parseInt(logoSize);
+    if (logoBgColor) updateData.logoBgColor = logoBgColor;
+    
+    if (localPath) {
+      const cloudinaryUrl = await uploadToCloudinary(localPath);
+      updateData.value = cloudinaryUrl;
     }
-
-    const cloudinaryUrl = await uploadToCloudinary(localPath);
 
     const updatedSetting = await Settings.findOneAndUpdate(
       { key: 'global_logo' },
-      { value: cloudinaryUrl },
-      { upsert: true, returnDocument: 'after' }
+      updateData,
+      { upsert: true, new: true }
+    );
+
+    res.json(updatedSetting);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
+// @route   POST /api/settings/update-branding
+// @desc    Update branding meta settings (size, color) without changing file
+router.post('/update-branding', async (req, res) => {
+  try {
+    const { logoSize, logoBgColor } = req.body;
+    
+    let updateData = {};
+    if (logoSize !== undefined) updateData.logoSize = parseInt(logoSize);
+    if (logoBgColor !== undefined) updateData.logoBgColor = logoBgColor;
+
+    const updatedSetting = await Settings.findOneAndUpdate(
+      { key: 'global_logo' },
+      updateData,
+      { upsert: true, new: true }
     );
 
     res.json(updatedSetting);
