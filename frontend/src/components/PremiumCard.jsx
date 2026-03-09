@@ -84,7 +84,9 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     extraTextStyle = {},
     titleStyle = {}, title2Style = {}, subtitleStyle = {}, subtitle2Style = {},
     subImage, subImagePosition = 'left', subImageSize = 40,
-    subImageFit = 'contain', subImageObjectPosition = 'center'
+    subImageFit = 'contain', subImageObjectPosition = 'center',
+    cardBgColor = '#002d72',
+    contentVerticalOffset = -8
   } = card;
 
   // Dynamic image styling based on size and position
@@ -220,6 +222,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
         className={`premium-card pos-${imagePosition} ${isPreview ? 'is-preview' : ''} ${isDragging ? 'is-dragging' : ''}`} 
         ref={cardRef}
         onMouseDown={handleMouseDown}
+        style={{ backgroundColor: cardBgColor }}
       >
         {/* Uploaded Subject Image Wrapper */}
         <div className={`subject-image-container ${isPreview && activeEditTarget === 'main' ? 'active-edit' : ''}`}>
@@ -303,7 +306,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
           </div>
 
           {/* Text Content on the Left */}
-          <div className="card-content-side" style={{ width: `${headlineWidth}%`, marginTop: '-8px' }}>
+          <div className="card-content-side" style={{ width: `${headlineWidth}%`, marginTop: `${contentVerticalOffset}px` }}>
             {title && <h2 className={`card-title-main ${getFontClass(titleStyle.fontFamily)}`} style={titleInlineStyle}>{title}</h2>}
             {title2 && <h2 className={`card-title-main ${getFontClass(title2Style.fontFamily)}`} style={{ ...title2InlineStyle, marginTop: '0' }}>{title2}</h2>}
 

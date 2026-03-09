@@ -63,6 +63,9 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     subImageSize: 40,
     subImageFit: 'contain',
     subImageObjectPosition: 'center',
+    // Card Layout & Background
+    cardBgColor: '#002d72',
+    contentVerticalOffset: -8,
   });
   const [image, setImage] = useState(null);
   const [subImage, setSubImage] = useState(null);
@@ -316,7 +319,10 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     subImagePosition: formData.subImagePosition,
     subImageSize: formData.subImageSize,
     subImageFit: formData.subImageFit,
-    subImageObjectPosition: formData.subImageObjectPosition
+    subImageObjectPosition: formData.subImageObjectPosition,
+    // Card Layout & Background
+    cardBgColor: formData.cardBgColor,
+    contentVerticalOffset: formData.contentVerticalOffset
   };
 
   const handleImagePositionChange = (newPos) => {
@@ -390,6 +396,35 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
                   style={{ width: '100%', height: '24px', padding: '0', border: 'none', background: 'none' }} 
                 />
               </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style={{ background: '#252525', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
+          <h4 style={{ marginTop: 0, marginBottom: '10px', fontSize: '14px', color: '#aaa' }}>Card Branding & Layout</h4>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '15px' }}>
+            <div>
+              <label style={{ fontSize: '12px', display: 'block', marginBottom: '5px' }}>Card Background</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <input 
+                  type="color" 
+                  value={formData.cardBgColor} 
+                  onChange={(e) => setFormData({...formData, cardBgColor: e.target.value})} 
+                  style={{ width: '40px', height: '30px', padding: '0', border: 'none', background: 'none', cursor: 'pointer' }} 
+                />
+                <span style={{ fontSize: '11px', color: '#888' }}>{formData.cardBgColor.toUpperCase()}</span>
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: '12px', display: 'block', marginBottom: '5px' }}>Content Vertical Offset ({formData.contentVerticalOffset}px)</label>
+              <input 
+                type="range" 
+                min="-100" 
+                max="100" 
+                value={formData.contentVerticalOffset} 
+                onChange={(e) => setFormData({...formData, contentVerticalOffset: parseInt(e.target.value)})} 
+                style={{ width: '100%' }}
+              />
             </div>
           </div>
         </div>
