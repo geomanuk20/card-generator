@@ -7,12 +7,7 @@ const { removeBackground } = require('@imgly/background-removal-node');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises;
 
-// Cloudinary Configuration
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
+// Cloudinary config is handled globally in server.js
 
 // Helper function to upload to Cloudinary and delete local file
 const uploadToCloudinary = async (localPath, folder = 'cards') => {

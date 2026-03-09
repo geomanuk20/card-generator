@@ -2,7 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config({ 
+  path: path.join(__dirname, '.env'),
+  override: true 
+});
+
+// Configure Cloudinary globally
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const cardRoutes = require('./routes/cardRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
@@ -58,4 +69,14 @@ if (process.env.NODE_ENV === 'production') {
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
+  
+  // Verify Cloudinary connection
+  cloudinary.api.ping()
+    .then(() => console.log('✅ Cloudinary Connected and Configured Successfully'))
+    .catch((err) => {
+      console.error('❌ Cloudinary Configuration Error:', err.message);
+      if (err.http_code === 401) {
+        console.error('   Hint: Please check if your CLOUDINARY_API_SECRET or API_KEY in .env matches your Cloudinary dashboard exactly.');
+      }
+    });
 });
