@@ -165,6 +165,10 @@ button:hover {
   pointer-events: none;
 }
 
+.card-sub-image.is-preview-target {
+  pointer-events: auto; /* Allow clicking on sub-image when it is the edit target */
+}
+
 .sub-pos-left { left: 0; bottom: 0; }
 .sub-pos-right { right: 0; bottom: 0; }
 .sub-pos-top { top: 0; left: 50%; transform: translateX(-50%); }
