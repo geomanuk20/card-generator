@@ -118,6 +118,9 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     subImageContainerStyle.width = '100%';
   }
 
+  // Helper for condensed Malayalam
+  const getFontClass = (family) => family === 'Anek Malayalam Condensed' ? 'anek-condensed' : '';
+
   const titleInlineStyle = {
     fontSize: titleStyle.fontSize || '2.8rem',
     fontWeight: titleStyle.fontWeight || '900',
@@ -294,8 +297,8 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
 
           {/* Text Content on the Left */}
           <div className="card-content-side" style={{ width: `${headlineWidth}%`, marginTop: '-8px' }}>
-            {title && <h2 className="card-title-main" style={titleInlineStyle}>{title}</h2>}
-            {title2 && <h2 className="card-title-main" style={{ ...title2InlineStyle, marginTop: '0' }}>{title2}</h2>}
+            {title && <h2 className={`card-title-main ${getFontClass(titleStyle.fontFamily)}`} style={titleInlineStyle}>{title}</h2>}
+            {title2 && <h2 className={`card-title-main ${getFontClass(title2Style.fontFamily)}`} style={{ ...title2InlineStyle, marginTop: '0' }}>{title2}</h2>}
 
             {subtitle && (
               subtitleShowBox ? (
@@ -310,15 +313,15 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
                     marginTop: '5px'
                   }}
                 >
-                  <p className="card-subtitle-main" style={{ ...subtitleInlineStyle, marginTop: 0 }}>{subtitle}</p>
+                  <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={{ ...subtitleInlineStyle, marginTop: 0 }}>{subtitle}</p>
                 </div>
               ) : (
-                <p className="card-subtitle-main" style={subtitleInlineStyle}>{subtitle}</p>
+                <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={subtitleInlineStyle}>{subtitle}</p>
               )
             )}
 
             {subtitle2 && (
-              <p className="card-subtitle-2" style={{ ...subtitle2InlineStyle, marginTop: '8px' }}>{subtitle2}</p>
+              <p className={`card-subtitle-2 ${getFontClass(subtitle2Style.fontFamily)}`} style={{ ...subtitle2InlineStyle, marginTop: '8px' }}>{subtitle2}</p>
             )}
 
             {extraTextShow && extraText && (
@@ -334,6 +337,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
                 }}
               >
                 <p
+                  className={getFontClass(extraTextStyle.fontFamily)}
                   style={{
                     ...extraTextInlineStyle,
                     margin: 0,

@@ -401,6 +401,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
                 <option value="Arvo">Arvo</option>
                 <option value="Lora">Lora</option>
                 <option value="Anek Malayalam">Anek Malayalam (MAL)</option>
+                <option value="Anek Malayalam Condensed">Anek Malayalam Condensed (MAL)</option>
                 <option value="Baloo Chettan 2">Baloo Chettan 2 (MAL)</option>
                 <option value="Gayathri">Gayathri (MAL)</option>
                 <option value="Manjari">Manjari (MAL)</option>
@@ -475,6 +476,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
                 <option value="PT Sans">PT Sans</option>
                 <option value="Raleway">Raleway</option>
                 <option value="Anek Malayalam">Anek Malayalam (MAL)</option>
+                <option value="Anek Malayalam Condensed">Anek Malayalam Condensed (MAL)</option>
                 <option value="Baloo Chettan 2">Baloo Chettan 2 (MAL)</option>
                 <option value="Gayathri">Gayathri (MAL)</option>
                 <option value="Manjari">Manjari (MAL)</option>

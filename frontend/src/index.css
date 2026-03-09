@@ -20,6 +20,12 @@ body {
   line-height: 1.5;
 }
 
+/* Custom Font Variation for Anek Malayalam Condensed */
+.anek-condensed {
+  font-family: 'Anek Malayalam', sans-serif;
+  font-variation-settings: "wdth" 75;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
