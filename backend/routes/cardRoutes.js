@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const Card = require('../models/Card');
-const { removeBackground } = require('@imgly/background-removal-node');
+// Background removal moved to frontend
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs').promises;
 
@@ -157,57 +157,6 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server Error' });
-  }
-});
-
-// @route   POST /api/cards/remove-bg
-// @desc    Remove background from an image
-router.post('/remove-bg', upload.single('image'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No image file uploaded' });
-    }
-
-    const inputPath = req.file.path;
-    const outputPath = inputPath.replace(path.extname(inputPath), '-no-bg.png');
-
-    console.log('Starting manual background removal for:', inputPath);
-    
-    // Dynamically import background removal library
-    const { removeBackground } = await import('@imgly/background-removal-node');
-    const fs = require('fs').promises;
-    
-    console.log('Initializing background removal with small model to save memory...');
-    
-    // Process background removal using the small model for memory efficiency
-    const resultBlob = await removeBackground(inputPath, {
-      model: 'small', // Use smaller model for Render.com free tier
-      debug: true     // Enable library's own debug logging
-    });
-    
-    console.log('Background removal processing complete, creating buffer...');
-    const resultBuffer = Buffer.from(await resultBlob.arrayBuffer());
-
-    // Save the processed image
-    await fs.writeFile(outputPath, resultBuffer);
-    
-    console.log('Background removed successfully:', outputPath);
-
-    // Upload the processed image to Cloudinary
-    const cloudinaryUrl = await uploadToCloudinary(outputPath);
-    
-    // Also delete the original input file if it was different
-    if (inputPath !== outputPath) {
-      await fs.unlink(inputPath).catch(() => {});
-    }
-
-    res.json({ 
-      success: true, 
-      imagePath: cloudinaryUrl // Now returns a permanent URL
-    });
-  } catch (error) {
-    console.error('Background removal failed:', error);
-    res.status(500).json({ error: 'Background removal failed', details: error.message });
   }
 });
 

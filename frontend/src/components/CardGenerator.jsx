@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import removeBackground from '@imgly/background-removal';
 import PremiumCard from './PremiumCard';
 const backendURL = ''; // Use relative paths for production
 
@@ -97,31 +98,18 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     if (!image) return alert('Please upload an image first');
     
     setIsProcessingBG(true);
-    const bgData = new FormData();
-    bgData.append('image', image);
-
     try {
-      const response = await axios.post('/api/cards/remove-bg', bgData);
-      if (response.data.success) {
-        // We need to fetch the processed image and set it back to the image state
-        // or just update how we handle the preview. 
-        // For simplicity and to ensure final generation uses the no-bg version,
-        // we'll fetch the image from the server and create a new File/Blob.
-        const imageUrl = response.data.imagePath.startsWith('http') 
-          ? response.data.imagePath 
-          : `/${response.data.imagePath}`;
-        const imageRes = await fetch(imageUrl);
-        const blob = await imageRes.blob();
-        
-        // Create a new File object to keep names consistent
-        const noBgFile = new File([blob], image.name.replace(/\.[^/.]+$/, "") + "-no-bg.png", { type: "image/png" });
-        
-        setImage(noBgFile);
-        alert('Background removed successfully!');
-      }
+      console.log('Starting browser-side background removal...');
+      const blob = await removeBackground(image);
+      
+      // Create a new File object to keep names consistent
+      const noBgFile = new File([blob], image.name.replace(/\.[^/.]+$/, "") + "-no-bg.png", { type: "image/png" });
+      
+      setImage(noBgFile);
+      alert('Background removed successfully in your browser!');
     } catch (error) {
-      console.error('Background removal failed:', error);
-      alert('AI Background removal failed. Please try again or use a different image.');
+      console.error('Browser-side background removal failed:', error);
+      alert('AI Background removal failed. Your browser might be under high load, or the image is too large.');
     } finally {
       setIsProcessingBG(false);
     }
@@ -131,24 +119,19 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     if (!subImage) return alert('Please upload a sub-image first');
     
     setIsProcessingSubBG(true);
-    const bgData = new FormData();
-    bgData.append('image', subImage);
-
     try {
-      const response = await axios.post('/api/cards/remove-bg', bgData);
-      if (response.data.imagePath) {
-        const imageUrl = response.data.imagePath.startsWith('http') 
-          ? response.data.imagePath 
-          : `/${response.data.imagePath}`;
-        const imageRes = await fetch(imageUrl);
-        const blob = await imageRes.blob();
-        const noBgFile = new File([blob], subImage.name.replace(/\.[^/.]+$/, "") + "-no-bg.png", { type: "image/png" });
-        setSubImage(noBgFile);
-        alert('Sub-image background removed successfully!');
-      }
+      console.log('Starting browser-side sub-background removal...');
+      const blob = await removeBackground(subImage);
+      
+      const noBgFile = new File([blob], subImage.name.replace(/\.[^/.]+$/, "") + "-no-bg.png", { type: "image/png" });
+      
+      setSubImage(noBgFile);
+      // Create a blob URL for preview
+      setSubPreviewUrl(URL.createObjectURL(blob));
+      alert('Sub-image background removed successfully in your browser!');
     } catch (error) {
-      console.error('Sub-image background removal failed:', error);
-      alert('AI Background removal failed for sub-image.');
+      console.error('Browser-side sub-background removal failed:', error);
+      alert('AI Background removal failed on sub-image.');
     } finally {
       setIsProcessingSubBG(false);
     }
