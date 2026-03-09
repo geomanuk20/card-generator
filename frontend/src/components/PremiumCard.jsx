@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 
-const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange, activeEditTarget = 'main' }) => {
+const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange, activeEditTarget = 'main', onTargetSelect }) => {
   const cardRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -204,24 +204,48 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
         ref={cardRef}
         onMouseDown={handleMouseDown}
       >
-        {/* Uploaded Subject Image */}
-        <img
-          src={imageUrl}
-          alt={title}
-          className="card-image-subject"
-          style={imageDynamicStyle}
-          crossOrigin="anonymous"
-        />
-
-        {/* Sub-Subject Image */}
-        {subImageUrl && (
+        {/* Uploaded Subject Image Wrapper */}
+        <div className={`subject-image-container ${activeEditTarget === 'main' ? 'active-edit' : ''}`}>
           <img
-            src={subImageUrl}
-            alt="Sub Subject"
-            className={`card-sub-image sub-pos-${subImagePosition} ${isPreview && activeEditTarget === 'sub' ? 'is-preview-target' : ''}`}
-            style={subImageDynamicStyle}
+            src={imageUrl}
+            alt={title}
+            className="card-image-subject"
+            style={imageDynamicStyle}
             crossOrigin="anonymous"
           />
+          {isPreview && (
+            <button 
+              className={`image-edit-trigger main ${activeEditTarget === 'main' ? 'active' : ''}`}
+              onClick={(e) => { e.stopPropagation(); onTargetSelect && onTargetSelect('main'); }}
+              title="Edit Main Image Position"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+              <span>Main</span>
+            </button>
+          )}
+        </div>
+
+        {/* Sub-Subject Image Wrapper */}
+        {subImageUrl && (
+          <div className={`sub-image-container sub-pos-${subImagePosition} ${activeEditTarget === 'sub' ? 'active-edit' : ''}`}>
+            <img
+              src={subImageUrl}
+              alt="Sub Subject"
+              className={`card-sub-image ${isPreview && activeEditTarget === 'sub' ? 'is-preview-target' : ''}`}
+              style={subImageDynamicStyle}
+              crossOrigin="anonymous"
+            />
+            {isPreview && (
+              <button 
+                className={`image-edit-trigger sub ${activeEditTarget === 'sub' ? 'active' : ''}`}
+                onClick={(e) => { e.stopPropagation(); onTargetSelect && onTargetSelect('sub'); }}
+                title="Edit Sub Image Position"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                <span>Sub</span>
+              </button>
+            )}
+          </div>
         )}
 
         {/* Main UI Overlay */}

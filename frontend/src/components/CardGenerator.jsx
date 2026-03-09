@@ -988,6 +988,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
             isPreview={true} 
             onImagePositionChange={handleImagePositionChange}
             activeEditTarget={activeEditTarget}
+            onTargetSelect={setActiveEditTarget}
           />
         </div>
       </div>
