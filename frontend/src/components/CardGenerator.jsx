@@ -105,7 +105,9 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
         // or just update how we handle the preview. 
         // For simplicity and to ensure final generation uses the no-bg version,
         // we'll fetch the image from the server and create a new File/Blob.
-        const imageUrl = `/${response.data.imagePath}`;
+        const imageUrl = response.data.imagePath.startsWith('http') 
+          ? response.data.imagePath 
+          : `/${response.data.imagePath}`;
         const imageRes = await fetch(imageUrl);
         const blob = await imageRes.blob();
         
@@ -133,7 +135,9 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     try {
       const response = await axios.post('/api/cards/remove-bg', bgData);
       if (response.data.imagePath) {
-        const imageUrl = `/${response.data.imagePath}`;
+        const imageUrl = response.data.imagePath.startsWith('http') 
+          ? response.data.imagePath 
+          : `/${response.data.imagePath}`;
         const imageRes = await fetch(imageUrl);
         const blob = await imageRes.blob();
         const noBgFile = new File([blob], subImage.name.replace(/\.[^/.]+$/, "") + "-no-bg.png", { type: "image/png" });
