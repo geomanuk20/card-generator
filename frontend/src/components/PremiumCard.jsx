@@ -193,6 +193,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
+        filter: (node) => {
           // Exclude the download button and edit triggers from the final image
           if (node.classList && (
             node.classList.contains('download-btn-overlay') || 
@@ -201,6 +202,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
             return false;
           }
           return true;
+        }
       });
 
       const link = document.createElement('a');
