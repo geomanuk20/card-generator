@@ -1,8 +1,69 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 
-const PremiumCard = ({ card, globalLogo, isPreview = false }) => {
+const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange }) => {
   const cardRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const [currentOffset, setCurrentOffset] = useState({ x: 50, y: 50 }); // Percentage based
+
+  useEffect(() => {
+    if (card && card.imageObjectPosition) {
+      const parts = card.imageObjectPosition.split(' ');
+      if (parts.length === 2) {
+        const x = parseInt(parts[0]) || 50;
+        const y = parseInt(parts[1]) || 50;
+        setCurrentOffset({ x, y });
+      } else if (card.imageObjectPosition === 'center') {
+        setCurrentOffset({ x: 50, y: 50 });
+      }
+    }
+  }, [card.imageObjectPosition]);
+
+  const handleMouseDown = (e) => {
+    if (!isPreview) return;
+    setIsDragging(true);
+    setStartPos({ x: e.clientX, y: e.clientY });
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !isPreview) return;
+
+    const dx = e.clientX - startPos.x;
+    const dy = e.clientY - startPos.y;
+
+    // Sensitivity factor (adjust as needed)
+    const sensitivity = 0.2; 
+    
+    const newX = Math.max(0, Math.min(100, currentOffset.x + dx * sensitivity));
+    const newY = Math.max(0, Math.min(100, currentOffset.y + dy * sensitivity));
+
+    const newPos = `${Math.round(newX)}% ${Math.round(newY)}%`;
+    if (onImagePositionChange) {
+      onImagePositionChange(newPos);
+    }
+    
+    setStartPos({ x: e.clientX, y: e.clientY });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
 
   if (!card) return null;
 
@@ -150,8 +211,12 @@ const PremiumCard = ({ card, globalLogo, isPreview = false }) => {
           src={imageUrl}
           alt={title}
           className="card-image-subject"
-          style={imageDynamicStyle}
+          style={{ 
+            ...imageDynamicStyle, 
+            cursor: isPreview ? (isDragging ? 'grabbing' : 'grab') : 'default' 
+          }}
           crossOrigin="anonymous"
+          onMouseDown={handleMouseDown}
         />
 
         {/* Sub-Subject Image */}

@@ -108,6 +108,14 @@ button:hover {
   top: 0;
   object-fit: contain;
   z-index: 1;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: grab;
+}
+
+.card-image-subject:active {
+  cursor: grabbing;
 }
 
 /* Default Right Positioning */

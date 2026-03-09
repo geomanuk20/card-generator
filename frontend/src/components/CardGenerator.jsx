@@ -296,6 +296,10 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     subImageObjectPosition: formData.subImageObjectPosition
   };
 
+  const handleImagePositionChange = (newPos) => {
+    setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
+  };
+
   return (
     <div className="generator-container" style={{
       display: 'flex',
@@ -939,7 +943,12 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
         <div className="preview-wrapper" style={{ 
           filter: 'drop-shadow(0 20px 50px rgba(0,0,0,0.5))'
         }}>
-          <PremiumCard card={previewCardData} globalLogo={globalLogo} isPreview={true} />
+          <PremiumCard 
+            card={previewCardData} 
+            globalLogo={globalLogo} 
+            isPreview={true} 
+            onImagePositionChange={handleImagePositionChange}
+          />
         </div>
       </div>
     </div>
