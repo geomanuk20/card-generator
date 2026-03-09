@@ -344,7 +344,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
                   borderRadius: '30px',
                   marginTop: '15px',
                   width: `${extraTextWidth}%`,
-                  display: 'inline-block'
+                  display: 'block'
                 }}
               >
                 <p
@@ -352,6 +352,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
                   style={{
                     ...extraTextInlineStyle,
                     margin: 0,
+                    width: '100%'
                   }}
                 >
                   {extraText}

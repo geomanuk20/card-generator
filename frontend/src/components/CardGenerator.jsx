@@ -665,6 +665,17 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
                 style={{ width: '40px', height: '24px', padding: '0', border: 'none', background: 'none' }} 
               />
             </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <label style={{ fontSize: '12px' }}>Width ({formData.extraTextWidth}%)</label>
+              <input 
+                type="range" 
+                min="30" 
+                max="100" 
+                value={formData.extraTextWidth} 
+                onChange={(e) => setFormData({...formData, extraTextWidth: parseInt(e.target.value)})} 
+                style={{ width: '80px' }}
+              />
+            </div>
           </div>
           
           <div className="styling-controls" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '10px', marginTop: '10px', background: '#333', padding: '10px', borderRadius: '8px' }}>
