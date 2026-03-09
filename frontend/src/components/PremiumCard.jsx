@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 
-const PremiumCard = ({ card, brandingSettings, isPreview = false, onImagePositionChange, activeEditTarget = 'main', onTargetSelect }) => {
+const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange, activeEditTarget = 'main', onTargetSelect }) => {
   const cardRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
@@ -178,8 +178,7 @@ const PremiumCard = ({ card, brandingSettings, isPreview = false, onImagePositio
     ? image
     : (image ? `/${image}` : 'https://via.placeholder.com/800x600?text=Upload+Image');
 
-  const { value: logoValue, logoSize = 80, logoBgColor = '#002d72' } = brandingSettings || {};
-  const logoUrl = logoValue ? (safeStartsWith(logoValue, 'http') ? logoValue : `/${logoValue}`) : null;
+  const logoUrl = globalLogo ? (safeStartsWith(globalLogo, 'http') ? globalLogo : `/${globalLogo}`) : null;
   
   const subImageUrl = subImage ? (
     (safeStartsWith(subImage, 'http') || safeStartsWith(subImage, 'blob:') || safeStartsWith(subImage, 'data:'))
@@ -194,13 +193,14 @@ const PremiumCard = ({ card, brandingSettings, isPreview = false, onImagePositio
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
-        filter: (node) => {
-          // Exclude the download button from the final image
-          if (node.classList && node.classList.contains('download-btn-overlay')) {
+          // Exclude the download button and edit triggers from the final image
+          if (node.classList && (
+            node.classList.contains('download-btn-overlay') || 
+            node.classList.contains('image-edit-trigger')
+          )) {
             return false;
           }
           return true;
-        }
       });
 
       const link = document.createElement('a');
@@ -220,7 +220,7 @@ const PremiumCard = ({ card, brandingSettings, isPreview = false, onImagePositio
         onMouseDown={handleMouseDown}
       >
         {/* Uploaded Subject Image Wrapper */}
-        <div className={`subject-image-container ${activeEditTarget === 'main' ? 'active-edit' : ''}`}>
+        <div className={`subject-image-container ${isPreview && activeEditTarget === 'main' ? 'active-edit' : ''}`}>
           <img
             src={imageUrl}
             alt={title}
@@ -243,7 +243,7 @@ const PremiumCard = ({ card, brandingSettings, isPreview = false, onImagePositio
         {/* Sub-Subject Image Wrapper */}
         {subImageUrl && (
           <div 
-            className={`sub-image-container sub-pos-${subImagePosition} ${activeEditTarget === 'sub' ? 'active-edit' : ''}`}
+            className={`sub-image-container sub-pos-${subImagePosition} ${isPreview && activeEditTarget === 'sub' ? 'active-edit' : ''}`}
             style={subImageContainerStyle}
           >
             <img
@@ -280,14 +280,13 @@ const PremiumCard = ({ card, brandingSettings, isPreview = false, onImagePositio
             </div>
 
             {/* Logo Section */}
-            <div className="card-logo-placeholder" style={{ background: logoBgColor, borderRadius: '4px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="card-logo-placeholder">
               {logoUrl ? (
                 <img
                   src={logoUrl}
                   alt="Logo"
                   className="uploaded-logo"
                   crossOrigin="anonymous"
-                  style={{ maxWidth: `${logoSize}%`, maxHeight: `${logoSize}%`, objectFit: 'contain' }}
                 />
               ) : (
                 <>
