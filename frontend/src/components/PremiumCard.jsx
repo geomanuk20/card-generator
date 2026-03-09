@@ -291,18 +291,13 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
                   crossOrigin="anonymous"
                 />
               ) : (
-                <div className="default-logo-container">
-                  <div className="card-logo-icon">
-                    <svg width="40" height="40" viewBox="0 0 100 100" fill="white">
-                      <path d="M50 10C30 10 15 25 10 45C5 65 15 85 40 90C45 91 50 85 50 80C50 75 45 70 40 65C35 60 40 50 50 50C60 50 70 60 75 70C80 80 85 90 95 90C105 90 110 80 100 60C90 40 70 10 50 10Z" />
-                      <circle cx="65" cy="35" r="5" fill="#002d72" />
-                    </svg>
+                <>
+                  <div className="card-logo-icon">🔥</div>
+                  <div className="card-logo-text">
+                    <div className="brand-name">WhiteswanTv</div>
+                    <div className="brand-news">NEWS</div>
                   </div>
-                  <div className="card-logo-text-group">
-                    <div className="card-logo-name-top">Whiteswan Tv</div>
-                    <div className="card-logo-name-bottom">NEWS</div>
-                  </div>
-                </div>
+                </>
               )}
             </div>
           </div>
@@ -329,14 +324,10 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
                       marginTop: '5px'
                     }}
                   >
-                    <div className="subtitle-accent-line"></div>
                     <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={{ ...subtitleInlineStyle, marginTop: 0 }}>{subtitle}</p>
                   </div>
                 ) : (
-                  <div className="subtitle-no-box-wrapper" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div className="subtitle-accent-line" style={{ background: subtitleStyle.color || '#ffffff' }}></div>
-                    <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={{ ...subtitleInlineStyle, width: '100%', margin: 0 }}>{subtitle}</p>
-                  </div>
+                  <p className={`card-subtitle-main ${getFontClass(subtitleStyle.fontFamily)}`} style={{ ...subtitleInlineStyle, width: '100%' }}>{subtitle}</p>
                 )}
               </div>
             )}
