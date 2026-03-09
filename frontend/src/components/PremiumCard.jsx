@@ -23,28 +23,33 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   const handleMouseDown = (e) => {
     if (!isPreview) return;
     setIsDragging(true);
-    setStartPos({ x: e.clientX, y: e.clientY });
+    
+    // Trigger an immediate update on click
+    handleMouseMove(e);
+    
     e.preventDefault();
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging || !isPreview) return;
+    if (!isDragging || !isPreview || !cardRef.current) return;
 
-    const dx = e.clientX - startPos.x;
-    const dy = e.clientY - startPos.y;
+    const imgElement = cardRef.current.querySelector('.card-image-subject');
+    if (!imgElement) return;
 
-    // Sensitivity factor (adjust as needed)
-    const sensitivity = 0.2; 
+    const rect = imgElement.getBoundingClientRect();
     
-    const newX = Math.max(0, Math.min(100, currentOffset.x + dx * sensitivity));
-    const newY = Math.max(0, Math.min(100, currentOffset.y + dy * sensitivity));
+    // Calculate percentage based on mouse position within the element
+    let xPercent = ((e.clientX - rect.left) / rect.width) * 100;
+    let yPercent = ((e.clientY - rect.top) / rect.height) * 100;
 
-    const newPos = `${Math.round(newX)}% ${Math.round(newY)}%`;
+    // Clamp values between 0 and 100
+    xPercent = Math.max(0, Math.min(100, xPercent));
+    yPercent = Math.max(0, Math.min(100, yPercent));
+
+    const newPos = `${Math.round(xPercent)}% ${Math.round(yPercent)}%`;
     if (onImagePositionChange) {
       onImagePositionChange(newPos);
     }
-    
-    setStartPos({ x: e.clientX, y: e.clientY });
   };
 
   const handleMouseUp = () => {
