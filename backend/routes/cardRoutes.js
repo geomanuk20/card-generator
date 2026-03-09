@@ -177,8 +177,15 @@ router.post('/remove-bg', upload.single('image'), async (req, res) => {
     const { removeBackground } = await import('@imgly/background-removal-node');
     const fs = require('fs').promises;
     
-    // Process background removal using the file path directly
-    const resultBlob = await removeBackground(inputPath);
+    console.log('Initializing background removal with small model to save memory...');
+    
+    // Process background removal using the small model for memory efficiency
+    const resultBlob = await removeBackground(inputPath, {
+      model: 'small', // Use smaller model for Render.com free tier
+      debug: true     // Enable library's own debug logging
+    });
+    
+    console.log('Background removal processing complete, creating buffer...');
     const resultBuffer = Buffer.from(await resultBlob.arrayBuffer());
 
     // Save the processed image
