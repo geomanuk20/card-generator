@@ -224,6 +224,9 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
     if (cardRef.current === null) return;
 
     try {
+      // Add exporting class to hide UI elements like the yellow border
+      cardRef.current.classList.add('exporting');
+      
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
@@ -238,6 +241,9 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
           return true;
         }
       });
+      
+      // Remove exporting class after capture
+      cardRef.current.classList.remove('exporting');
 
       const link = document.createElement('a');
       link.download = `news-card-${Date.now()}.png`;

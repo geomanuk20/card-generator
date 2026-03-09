@@ -335,9 +335,14 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
 
   const handleImagePositionChange = (newPos) => {
     if (activeEditTarget === 'main') {
-      if (formData.imagePosition === 'free' && newPos.includes('%')) {
+      if (newPos.includes('%')) {
         const [x, y] = newPos.split(' ').map(val => parseInt(val));
-        setFormData(prev => ({ ...prev, imageX: x, imageY: y }));
+        setFormData(prev => ({ 
+          ...prev, 
+          imagePosition: 'free',
+          imageX: x, 
+          imageY: y 
+        }));
       } else {
         setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
       }
