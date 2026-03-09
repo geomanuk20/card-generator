@@ -102,15 +102,20 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   const subImageDynamicStyle = {
     objectFit: subImageFit,
     objectPosition: subImageObjectPosition,
-    zIndex: 2
+    width: '100%',
+    height: '100%'
+  };
+
+  const subImageContainerStyle = {
+    zIndex: 3
   };
 
   if (subImagePosition === 'left' || subImagePosition === 'right') {
-    subImageDynamicStyle.width = `${subImageSize}%`;
-    subImageDynamicStyle.height = '100%';
+    subImageContainerStyle.width = `${subImageSize}%`;
+    subImageContainerStyle.height = '100%';
   } else {
-    subImageDynamicStyle.height = `${subImageSize}%`;
-    subImageDynamicStyle.width = '100%';
+    subImageContainerStyle.height = `${subImageSize}%`;
+    subImageContainerStyle.width = '100%';
   }
 
   const titleInlineStyle = {
@@ -161,13 +166,18 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   const month = dateObj.toLocaleString('default', { month: 'short' }).toUpperCase();
   const year = dateObj.getFullYear();
 
+  // Helper for safe string checks
+  const safeStartsWith = (str, prefix) => typeof str === 'string' && str.startsWith(prefix);
+
   // Handle local vs remote image vs preview blob
-  const imageUrl = (image && (image.startsWith('http') || image.startsWith('blob:') || image.startsWith('data:')))
+  const imageUrl = (safeStartsWith(image, 'http') || safeStartsWith(image, 'blob:') || safeStartsWith(image, 'data:'))
     ? image
-    : `/${image}`;
-  const logoUrl = globalLogo ? (globalLogo.startsWith('http') ? globalLogo : `/${globalLogo}`) : null;
+    : (image ? `/${image}` : 'https://via.placeholder.com/800x600?text=Upload+Image');
+
+  const logoUrl = globalLogo ? (safeStartsWith(globalLogo, 'http') ? globalLogo : `/${globalLogo}`) : null;
+  
   const subImageUrl = subImage ? (
-    (subImage.startsWith('http') || subImage.startsWith('blob:') || subImage.startsWith('data:'))
+    (safeStartsWith(subImage, 'http') || safeStartsWith(subImage, 'blob:') || safeStartsWith(subImage, 'data:'))
       ? subImage
       : `/${subImage}`
   ) : null;
@@ -227,7 +237,10 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
 
         {/* Sub-Subject Image Wrapper */}
         {subImageUrl && (
-          <div className={`sub-image-container sub-pos-${subImagePosition} ${activeEditTarget === 'sub' ? 'active-edit' : ''}`}>
+          <div 
+            className={`sub-image-container sub-pos-${subImagePosition} ${activeEditTarget === 'sub' ? 'active-edit' : ''}`}
+            style={subImageContainerStyle}
+          >
             <img
               src={subImageUrl}
               alt="Sub Subject"
