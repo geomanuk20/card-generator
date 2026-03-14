@@ -333,15 +333,15 @@ const CardGenerator = ({ onCardGenerated, globalLogo, editCardData }) => {
     data.append('subImageObjectPosition', formData.subImageObjectPosition);
     if (subImage) {
       data.append('subImage', subImage);
-    } else if (editCardData && editCardData.subImage) {
+    } else if (subPreviewUrl) {
       // Pass the existing URL back if no new image was uploaded to avoid wiping it out
-      data.append('existingSubImage', editCardData.subImage);
+      data.append('existingSubImage', subPreviewUrl);
     }
 
     if (image) {
       data.append('image', image);
-    } else if (editCardData && editCardData.image) {
-      data.append('existingImage', editCardData.image);
+    } else if (previewUrl) {
+      data.append('existingImage', previewUrl);
     }
 
     try {
@@ -990,12 +990,14 @@ const CardGenerator = ({ onCardGenerated, globalLogo, editCardData }) => {
         <div className="input-group">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
             <label style={{ margin: 0 }}>Upload Subject Image</label>
-            {image && (
+            {(image || previewUrl) && (
               <button 
                 type="button" 
                 onClick={() => {
                   setImage(null);
-                  document.getElementById('mainImageInput').value = '';
+                  setPreviewUrl('');
+                  const input = document.getElementById('mainImageInput');
+                  if (input) input.value = '';
                 }}
                 style={{ background: '#ff4444', color: 'white', padding: '4px 8px', fontSize: '11px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
               >
@@ -1003,14 +1005,21 @@ const CardGenerator = ({ onCardGenerated, globalLogo, editCardData }) => {
               </button>
             )}
           </div>
-          <input
-            id="mainImageInput"
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-            required
-            style={{ display: 'block', width: '100%', padding: '10px', background: '#333', color: 'white', borderRadius: '4px', border: '1px solid #444', marginBottom: '10px' }}
-          />
+          {(!image && previewUrl) ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: '#333', padding: '10px', borderRadius: '4px', border: '1px solid #444', marginBottom: '10px' }}>
+              <img src={previewUrl.startsWith('http') ? previewUrl : `/${previewUrl}`} alt="Current Subject" style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} crossOrigin="anonymous" />
+              <span style={{ fontSize: '12px', color: '#aaa', flex: 1 }}>Using previously saved image.</span>
+            </div>
+          ) : (
+            <input
+              id="mainImageInput"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImage(e.target.files[0])}
+              required={!previewUrl}
+              style={{ display: 'block', width: '100%', padding: '10px', background: '#333', color: 'white', borderRadius: '4px', border: '1px solid #444', marginBottom: '10px' }}
+            />
+          )}
           {image && (
             <button 
               type="button" 
@@ -1044,13 +1053,14 @@ const CardGenerator = ({ onCardGenerated, globalLogo, editCardData }) => {
         <div style={{ background: '#252525', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <h4 style={{ margin: 0, fontSize: '14px', color: '#aaa' }}>Sub-Subject Image (Second Image)</h4>
-            {subImage && (
+            {(subImage || subPreviewUrl) && (
               <button 
                 type="button" 
                 onClick={() => {
                   setSubImage(null);
-                  document.getElementById('subImageInput').value = '';
-                  // Reset positions to default string if necessary or leave it
+                  setSubPreviewUrl('');
+                  const input = document.getElementById('subImageInput');
+                  if (input) input.value = '';
                 }}
                 style={{ background: '#ff4444', color: 'white', padding: '4px 8px', fontSize: '11px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
               >
@@ -1058,13 +1068,21 @@ const CardGenerator = ({ onCardGenerated, globalLogo, editCardData }) => {
               </button>
             )}
           </div>
-          <input
-            id="subImageInput"
-            type="file"
-            accept="image/*"
-            onChange={(e) => setSubImage(e.target.files[0])}
-            style={{ display: 'block', width: '100%', padding: '10px', background: '#333', color: 'white', borderRadius: '4px', border: '1px solid #444', marginBottom: '10px' }}
-          />
+
+          {(!subImage && subPreviewUrl) ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', background: '#333', padding: '10px', borderRadius: '4px', border: '1px solid #444', marginBottom: '10px' }}>
+              <img src={subPreviewUrl.startsWith('http') ? subPreviewUrl : `/${subPreviewUrl}`} alt="Current Sub Subject" style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} crossOrigin="anonymous" />
+              <span style={{ fontSize: '12px', color: '#aaa', flex: 1 }}>Using previously saved image.</span>
+            </div>
+          ) : (
+            <input
+              id="subImageInput"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setSubImage(e.target.files[0])}
+              style={{ display: 'block', width: '100%', padding: '10px', background: '#333', color: 'white', borderRadius: '4px', border: '1px solid #444', marginBottom: '10px' }}
+            />
+          )}
           {subImage && (
             <button 
               type="button" 
