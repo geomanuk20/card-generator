@@ -1,48 +1,108 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { toPng } from 'html-to-image';
 
+const parsePosition = (posStr) => {
+  if (!posStr) return { x: 50, y: 50 };
+  if (posStr === 'center') return { x: 50, y: 50 };
+  if (posStr === 'top') return { x: 50, y: 0 };
+  if (posStr === 'bottom') return { x: 50, y: 100 };
+  if (posStr === 'left') return { x: 0, y: 50 };
+  if (posStr === 'right') return { x: 100, y: 50 };
+  if (posStr === 'top left') return { x: 0, y: 0 };
+  if (posStr === 'top right') return { x: 100, y: 0 };
+  if (posStr === 'bottom left') return { x: 0, y: 100 };
+  if (posStr === 'bottom right') return { x: 100, y: 100 };
+  if (posStr === 'left center') return { x: 0, y: 50 };
+  if (posStr === 'right center') return { x: 100, y: 50 };
+  if (posStr === 'center top') return { x: 50, y: 0 };
+  if (posStr === 'center bottom') return { x: 50, y: 100 };
+  if (posStr.includes('%')) {
+    const parts = posStr.split(' ');
+    const x = parseFloat(parts[0]);
+    const y = parseFloat(parts[1] !== undefined ? parts[1] : parts[0]);
+    return { x: isNaN(x) ? 50 : x, y: isNaN(y) ? 50 : y };
+  }
+  return { x: 50, y: 50 };
+};
+
 const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange, activeEditTarget = 'main', onTargetSelect }) => {
   const cardRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const dragTargetRef = useRef(activeEditTarget);
+  const dragStartRef = useRef(null);
+
+  useEffect(() => {
+    if (!isDragging) {
+      dragTargetRef.current = activeEditTarget;
+    }
+  }, [activeEditTarget, isDragging]);
+
+  const updatePosition = (e, currentTarget) => {
+    if (!cardRef.current || !dragStartRef.current) return;
+    const isFree = currentTarget === 'main' ? card.imagePosition === 'free' : card.subImagePosition === 'free';
+    const rect = cardRef.current.getBoundingClientRect();
+    
+    const deltaX = e.clientX - dragStartRef.current.startX;
+    const deltaY = e.clientY - dragStartRef.current.startY;
+    
+    let percentDeltaX = (deltaX / rect.width) * 100;
+    let percentDeltaY = (deltaY / rect.height) * 100;
+    
+    let newX, newY;
+    if (isFree) {
+      newX = dragStartRef.current.startPosX + percentDeltaX;
+      newY = dragStartRef.current.startPosY + percentDeltaY;
+    } else {
+      newX = dragStartRef.current.startPosX - percentDeltaX;
+      newY = dragStartRef.current.startPosY - percentDeltaY;
+      newX = Math.max(0, Math.min(100, newX));
+      newY = Math.max(0, Math.min(100, newY));
+    }
+
+    const newPos = `${Math.round(newX)}% ${Math.round(newY)}%`;
+    if (onImagePositionChange) {
+      onImagePositionChange(newPos, currentTarget);
+    }
+  };
 
   const handleMouseDown = (e) => {
     if (!isPreview) return;
     if (e.target.closest('button')) return; // Ignore drag if clicking on the download button or other buttons
     
+    let target = activeEditTarget;
+    if (e.target.closest('.sub-image-container') || e.target.classList.contains('card-sub-image')) {
+      target = 'sub';
+    } else if (e.target.closest('.subject-image-container') || e.target.classList.contains('card-image-subject')) {
+      target = 'main';
+    }
+
+    if (onTargetSelect && target !== activeEditTarget) {
+      onTargetSelect(target);
+    }
+    
+    dragTargetRef.current = target;
+    const posStr = target === 'main' ? card.imageObjectPosition : card.subImageObjectPosition;
+    const currentPos = parsePosition(posStr);
+    
+    dragStartRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      startPosX: currentPos.x,
+      startPosY: currentPos.y
+    };
+    
     setIsDragging(true);
-    
-    // Trigger an immediate update on click
-    handleMouseMove(e);
-    
     e.preventDefault();
   };
 
   const handleMouseMove = (e) => {
-    if (!isDragging || !isPreview || !cardRef.current) return;
-
-    const targetSelector = activeEditTarget === 'main' ? '.card-image-subject' : '.card-sub-image';
-    const imgElement = cardRef.current.querySelector(targetSelector);
-    if (!imgElement) return;
-
-    const rect = imgElement.getBoundingClientRect();
-    
-    // Calculate percentage based on mouse position within the element
-    let xPercent = ((e.clientX - rect.left) / rect.width) * 100;
-    let yPercent = ((e.clientY - rect.top) / rect.height) * 100;
-
-    // Clamp values between 0 and 100
-    xPercent = Math.max(0, Math.min(100, xPercent));
-    yPercent = Math.max(0, Math.min(100, yPercent));
-
-    const newPos = `${Math.round(xPercent)}% ${Math.round(yPercent)}%`;
-    if (onImagePositionChange) {
-      onImagePositionChange(newPos);
-    }
+    if (!isPreview || !isDragging) return;
+    updatePosition(e, dragTargetRef.current);
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    dragStartRef.current = null;
   };
 
   useEffect(() => {
@@ -91,12 +151,26 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
 
   // Dynamic image styling based on size and position
   const imageDynamicStyle = {
-    objectFit: imageFit, // Cover (fill height) or Contain
-    objectPosition: imageObjectPosition
+    objectFit: imageFit // Cover (fill height) or Contain
   };
+  
+  // Conditionally add objectPosition since free removes it
+  if (imagePosition !== 'free') {
+    imageDynamicStyle.objectPosition = imageObjectPosition;
+  }
+
   if (imagePosition === 'left' || imagePosition === 'right') {
     imageDynamicStyle.width = `${imageSize}%`;
     imageDynamicStyle.height = '100%';
+  } else if (imagePosition === 'free') {
+    const pos = parsePosition(imageObjectPosition);
+    imageDynamicStyle.position = 'absolute';
+    imageDynamicStyle.left = `${pos.x}%`;
+    imageDynamicStyle.top = `${pos.y}%`;
+    imageDynamicStyle.transform = 'translate(-50%, -50%)';
+    imageDynamicStyle.width = `${imageSize}%`;
+    imageDynamicStyle.height = 'auto'; // allow original aspect ratio
+    imageDynamicStyle.margin = '0';
   } else {
     imageDynamicStyle.height = `${imageSize}%`;
     imageDynamicStyle.width = '100%';
@@ -104,10 +178,13 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
 
   const subImageDynamicStyle = {
     objectFit: subImageFit,
-    objectPosition: subImageObjectPosition,
     width: '100%',
     height: '100%'
   };
+
+  if (subImagePosition !== 'free') {
+    subImageDynamicStyle.objectPosition = subImageObjectPosition;
+  }
 
   const subImageContainerStyle = {
     zIndex: 3
@@ -116,6 +193,15 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   if (subImagePosition === 'left' || subImagePosition === 'right') {
     subImageContainerStyle.width = `${subImageSize}%`;
     subImageContainerStyle.height = '100%';
+  } else if (subImagePosition === 'free') {
+    const pos = parsePosition(subImageObjectPosition);
+    subImageContainerStyle.position = 'absolute';
+    subImageContainerStyle.left = `${pos.x}%`;
+    subImageContainerStyle.top = `${pos.y}%`;
+    subImageContainerStyle.transform = 'translate(-50%, -50%)';
+    subImageContainerStyle.width = `${subImageSize}%`;
+    subImageContainerStyle.height = 'auto';
+    subImageDynamicStyle.height = 'auto';
   } else {
     subImageContainerStyle.height = `${subImageSize}%`;
     subImageContainerStyle.width = '100%';

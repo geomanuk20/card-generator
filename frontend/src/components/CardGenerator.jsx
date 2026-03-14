@@ -357,8 +357,9 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     contentVerticalOffset: formData.contentVerticalOffset
   };
 
-  const handleImagePositionChange = (newPos) => {
-    if (activeEditTarget === 'main') {
+  const handleImagePositionChange = (newPos, target) => {
+    const targetToUpdate = target || activeEditTarget;
+    if (targetToUpdate === 'main') {
       setFormData(prev => ({ ...prev, imageObjectPosition: newPos }));
     } else {
       setFormData(prev => ({ ...prev, subImageObjectPosition: newPos }));
@@ -867,6 +868,15 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
                 onChange={(e) => setFormData({ ...formData, imagePosition: e.target.value })}
               /> Bottom
             </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '0.9rem' }}>
+              <input 
+                type="radio" 
+                name="position" 
+                value="free" 
+                checked={formData.imagePosition === 'free'}
+                onChange={(e) => setFormData({ ...formData, imagePosition: e.target.value })}
+              /> Free
+            </label>
           </div>
           <div style={{ marginTop: '10px', display: 'flex', gap: '20px', alignItems: 'flex-end' }}>
             <div style={{ flex: 1 }}>
@@ -985,7 +995,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
           <div style={{ display: 'flex', gap: '1rem', marginTop: '10px' }}>
             <label style={{ fontSize: '12px', display: 'block' }}>Position</label>
             <div style={{ display: 'flex', gap: '10px' }}>
-              {['left', 'right', 'top', 'bottom'].map(pos => (
+              {['left', 'right', 'top', 'bottom', 'free'].map(pos => (
                 <label key={pos} style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>
                   <input 
                     type="radio" 
