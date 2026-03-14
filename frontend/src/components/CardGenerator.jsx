@@ -919,8 +919,23 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
           </div>
         </div>
         <div className="input-group">
-          <label>Upload Subject Image</label>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+            <label style={{ margin: 0 }}>Upload Subject Image</label>
+            {image && (
+              <button 
+                type="button" 
+                onClick={() => {
+                  setImage(null);
+                  document.getElementById('mainImageInput').value = '';
+                }}
+                style={{ background: '#ff4444', color: 'white', padding: '4px 8px', fontSize: '11px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+              >
+                Remove Image
+              </button>
+            )}
+          </div>
           <input
+            id="mainImageInput"
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files[0])}
@@ -958,8 +973,24 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
         </div>
 
         <div style={{ background: '#252525', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
-          <h4 style={{ marginTop: 0, marginBottom: '10px', fontSize: '14px', color: '#aaa' }}>Sub-Subject Image (Second Image)</h4>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <h4 style={{ margin: 0, fontSize: '14px', color: '#aaa' }}>Sub-Subject Image (Second Image)</h4>
+            {subImage && (
+              <button 
+                type="button" 
+                onClick={() => {
+                  setSubImage(null);
+                  document.getElementById('subImageInput').value = '';
+                  // Reset positions to default string if necessary or leave it
+                }}
+                style={{ background: '#ff4444', color: 'white', padding: '4px 8px', fontSize: '11px', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+              >
+                Remove Image
+              </button>
+            )}
+          </div>
           <input
+            id="subImageInput"
             type="file"
             accept="image/*"
             onChange={(e) => setSubImage(e.target.files[0])}
