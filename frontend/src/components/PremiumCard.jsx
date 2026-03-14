@@ -318,7 +318,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
             alt={title}
             className="card-image-subject"
             style={imageDynamicStyle}
-            crossOrigin="anonymous"
+            crossOrigin={(safeStartsWith(imageUrl, 'http://') || safeStartsWith(imageUrl, 'https://')) ? 'anonymous' : undefined}
           />
           {isPreview && (
             <button 
@@ -343,7 +343,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
               alt="Sub Subject"
               className={`card-sub-image ${isPreview && activeEditTarget === 'sub' ? 'is-preview-target' : ''}`}
               style={subImageDynamicStyle}
-              crossOrigin="anonymous"
+              crossOrigin={(safeStartsWith(subImageUrl, 'http://') || safeStartsWith(subImageUrl, 'https://')) ? 'anonymous' : undefined}
             />
             {isPreview && (
               <button 
