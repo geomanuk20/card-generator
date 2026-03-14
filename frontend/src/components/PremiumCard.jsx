@@ -25,7 +25,7 @@ const parsePosition = (posStr) => {
   return { x: 50, y: 50 };
 };
 
-const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange, activeEditTarget = 'main', onTargetSelect }) => {
+const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChange, activeEditTarget = 'main', onTargetSelect, onEdit }) => {
   const cardRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const dragTargetRef = useRef(activeEditTarget);
@@ -491,16 +491,27 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
           </div>
         </div>
 
-        {/* Download Button Overlay - Hidden during capture */}
+        {/* Download & Edit Button Overlay - Hidden during capture */}
         {!isPreview && (
-          <button className="download-btn-overlay" onClick={handleDownload} title="Download as Image">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download
-          </button>
+          <div className="card-actions-overlay">
+            <button className="action-btn-overlay" onClick={handleDownload} title="Download as Image">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download
+            </button>
+            {onEdit && (
+              <button className="action-btn-overlay edit-btn" onClick={onEdit} title="Edit Card">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Edit
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

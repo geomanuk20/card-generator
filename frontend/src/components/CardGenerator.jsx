@@ -4,7 +4,7 @@ import { removeBackground } from '@imgly/background-removal';
 import PremiumCard from './PremiumCard';
 const backendURL = ''; // Use relative paths for production
 
-const CardGenerator = ({ onCardGenerated, globalLogo }) => {
+const CardGenerator = ({ onCardGenerated, globalLogo, editCardData }) => {
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
@@ -98,6 +98,64 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
       }
     }
   }, []);
+
+  // Update state when an edit operation is requested
+  useEffect(() => {
+    if (editCardData) {
+      const { 
+        image, subImage, logo, _id, createdAt, updatedAt, __v, 
+        titleStyle, title2Style, subtitleStyle, subtitle2Style, extraTextStyle,
+        ...flatData 
+      } = editCardData;
+
+      setFormData(prev => ({
+        ...prev,
+        ...flatData,
+        // Map back nested style objects to flat form structure
+        titleFontSize: parseFloat(titleStyle?.fontSize) || 2.8,
+        titleFontWeight: titleStyle?.fontWeight || '900',
+        titleFontFamily: titleStyle?.fontFamily || 'Anek Malayalam',
+        titleColor: titleStyle?.color || '#f8f107',
+        titleUnderline: titleStyle?.underline || false,
+
+        title2FontSize: parseFloat(title2Style?.fontSize) || 2.8,
+        title2FontWeight: title2Style?.fontWeight || '900',
+        title2FontFamily: title2Style?.fontFamily || 'Anek Malayalam',
+        title2Color: title2Style?.color || '#f8f107',
+        title2Underline: title2Style?.underline || false,
+
+        subtitleFontSize: parseFloat(subtitleStyle?.fontSize) || 1,
+        subtitleFontWeight: subtitleStyle?.fontWeight || 'normal',
+        subtitleFontFamily: subtitleStyle?.fontFamily || 'Anek Malayalam',
+        subtitleColor: subtitleStyle?.color || '#ffffff',
+        subtitleUnderline: subtitleStyle?.underline || false,
+
+        subtitle2FontSize: parseFloat(subtitle2Style?.fontSize) || 1,
+        subtitle2FontWeight: subtitle2Style?.fontWeight || 'normal',
+        subtitle2FontFamily: subtitle2Style?.fontFamily || 'Anek Malayalam',
+        subtitle2Color: subtitle2Style?.color || '#f8f107',
+        subtitle2Underline: subtitle2Style?.underline || false,
+
+        extraTextFontSize: parseFloat(extraTextStyle?.fontSize) || 0.9,
+        extraTextFontWeight: extraTextStyle?.fontWeight || 'bold',
+        extraTextFontFamily: extraTextStyle?.fontFamily || 'Anek Malayalam',
+        extraTextColor: extraTextStyle?.color || '#ffffff',
+        extraTextUnderline: extraTextStyle?.underline || false,
+      }));
+
+      // In edit mode, set the previews to the saved URLs, 
+      // but wipe the File objects so resubmitting requires new files 
+      // OR handle retaining the old string in the backend if no new file is passed.
+      // (For this implementation, we will prefill the preview but clear the `image` File state, 
+      // requiring re-upload to actually save a new image on the edit.
+      // OR if we wanted to support direct saving without reupload, see below approach)
+      
+      setPreviewUrl(image || '');
+      setSubPreviewUrl(subImage || '');
+      setImage(null);
+      setSubImage(null);
+    }
+  }, [editCardData]);
 
   // Save state to localStorage whenever non-content settings change
   useEffect(() => {
@@ -210,7 +268,7 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!image) return alert('Please upload a main image');
+    if (!image && !editCardData?.image) return alert('Please upload a main image');
 
     setLoading(true);
     const data = new FormData();
@@ -273,9 +331,18 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     data.append('subImageSize', formData.subImageSize);
     data.append('subImageFit', formData.subImageFit);
     data.append('subImageObjectPosition', formData.subImageObjectPosition);
-    if (subImage) data.append('subImage', subImage);
+    if (subImage) {
+      data.append('subImage', subImage);
+    } else if (editCardData && editCardData.subImage) {
+      // Pass the existing URL back if no new image was uploaded to avoid wiping it out
+      data.append('existingSubImage', editCardData.subImage);
+    }
 
-    data.append('image', image);
+    if (image) {
+      data.append('image', image);
+    } else if (editCardData && editCardData.image) {
+      data.append('existingImage', editCardData.image);
+    }
 
     try {
       const response = await axios.post('/api/cards', data);

@@ -54,7 +54,8 @@ router.post('/', upload.fields([
       title2, title2FontSize, title2FontWeight, title2FontFamily, title2Color, title2Underline,
       subtitleFontSize, subtitleFontWeight, subtitleFontFamily, subtitleColor, subtitleUnderline,
       subtitle2, subtitle2FontSize, subtitle2FontWeight, subtitle2FontFamily, subtitle2Color, subtitle2Underline,
-      subImagePosition, subImageSize, subImageFit, subImageObjectPosition
+      subImagePosition, subImageSize, subImageFit, subImageObjectPosition,
+      existingImage, existingSubImage
     } = req.body;
     let imagePath = '';
     let logoPath = '';
@@ -68,6 +69,12 @@ router.post('/', upload.fields([
     }
     if (req.files['subImage']) {
       subImagePath = await uploadToCloudinary(req.files['subImage'][0].path);
+    } else if (existingSubImage) {
+      subImagePath = existingSubImage;
+    }
+
+    if (!imagePath && existingImage) {
+      imagePath = existingImage;
     }
 
     if (!imagePath) {

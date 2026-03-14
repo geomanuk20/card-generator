@@ -516,11 +516,20 @@ button:hover {
   border-radius: 12px;
 }
 
-.download-btn-overlay {
+.card-actions-overlay {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.9);
+  display: flex;
+  gap: 1rem;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-btn-overlay {
   background: var(--secondary-yellow);
   color: black !important;
   border: none;
@@ -533,25 +542,28 @@ button:hover {
   gap: 0.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  z-index: 10;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: 1px;
+  transition: all 0.2s;
 }
 
-.card-container-wrapper:hover .download-btn-overlay {
+.action-btn-overlay.edit-btn {
+  background: #2ba5bc; /* Teal */
+  color: white !important;
+}
+
+.card-container-wrapper:hover .card-actions-overlay {
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, -50%) scale(1);
 }
 
-.download-btn-overlay:hover {
+.action-btn-overlay:hover {
   background: white;
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: scale(1.05);
+  color: black !important;
 }
 
-.download-btn-overlay svg {
+.action-btn-overlay svg {
   stroke-width: 3px;
 }
 

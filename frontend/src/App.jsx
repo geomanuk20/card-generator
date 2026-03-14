@@ -7,6 +7,7 @@ import GlobalBranding from './components/GlobalBranding';
 const App = () => {
   const [cards, setCards] = useState([]);
   const [globalLogo, setGlobalLogo] = useState('');
+  const [editCardData, setEditCardData] = useState(null);
 
   const fetchCards = async () => {
     try {
@@ -47,6 +48,7 @@ const App = () => {
       <CardGenerator
         onCardGenerated={handleCardGenerated}
         globalLogo={globalLogo}
+        editCardData={editCardData}
       />
 
       <div className="content-list">
@@ -55,6 +57,10 @@ const App = () => {
             key={card._id}
             card={card}
             globalLogo={globalLogo}
+            onEdit={() => {
+              setEditCardData(card);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
           />
         ))}
       </div>
