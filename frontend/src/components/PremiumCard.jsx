@@ -281,6 +281,8 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         pixelRatio: 2,
+        useCORS: true,
+        allowTaint: true,
         filter: (node) => {
           // Exclude markers and UI from capture
           if (node.classList && (
