@@ -290,7 +290,13 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
         useCORS: true,
         allowTaint: true,
         skipFonts: false,
-        fontEmbedCSS: "@import url('https://fonts.googleapis.com/css2?family=Anton&family=Arvo:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;700;900&family=Lato:wght@300;400;700&family=Lora:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Montserrat:wght@300;400;700;900&family=Nunito:wght@300;400;700&family=Open+Sans:wght@300;400;600;700&family=Oswald:wght@300;400;700&family=PT+Sans:wght@400;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;700&family=Raleway:wght@300;400;700&family=Roboto:wght@300;400;700&family=Ubuntu:wght@300;400;700&family=Anek+Malayalam:wdth,wght@75,300;75,400;75,700;75,800;100,300;100,400;100,700;100,800&family=Baloo+Chettan+2:wght@400;600;800&family=Gayathri:wght@100;400;700&family=Manjari:wght@100;400;700&family=Noto+Sans+Malayalam:wght@100;400;700;900&family=Noto+Serif+Malayalam:wght@400;700&display=swap');",
+        onclone: (clonedDoc) => {
+            // Safari/Webkit often drops external fonts unless the stylesheet is physically injected into the clone
+            const fontLink = clonedDoc.createElement('link');
+            fontLink.href = "https://fonts.googleapis.com/css2?family=Anton&family=Arvo:wght@400;700&family=Bebas+Neue&family=Inter:wght@300;400;700;900&family=Lato:wght@300;400;700&family=Lora:wght@400;700&family=Merriweather:wght@300;400;700;900&family=Montserrat:wght@300;400;700;900&family=Nunito:wght@300;400;700&family=Open+Sans:wght@300;400;600;700&family=Oswald:wght@300;400;700&family=PT+Sans:wght@400;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;700&family=Raleway:wght@300;400;700&family=Roboto:wght@300;400;700&family=Ubuntu:wght@300;400;700&family=Anek+Malayalam:wdth,wght@75,300;75,400;75,700;75,800;100,300;100,400;100,700;100,800&family=Baloo+Chettan+2:wght@400;600;800&family=Gayathri:wght@100;400;700&family=Manjari:wght@100;400;700&family=Noto+Sans+Malayalam:wght@100;400;700;900&family=Noto+Serif+Malayalam:wght@400;700&display=swap";
+            fontLink.rel = "stylesheet";
+            clonedDoc.head.appendChild(fontLink);
+        },
         filter: (node) => {
           // Exclude markers and UI from capture
           if (node.classList && (
