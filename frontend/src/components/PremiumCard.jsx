@@ -285,7 +285,7 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
           // Exclude markers and UI from capture
           if (node.classList && (
             node.classList.contains('card-actions-overlay') || 
-            node.classList.contains('action-btn-overlay') || 
+            node.classList.contains('action-btn-overlay') ||
             node.classList.contains('image-edit-trigger')
           )) {
             return false;
