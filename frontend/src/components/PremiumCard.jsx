@@ -262,17 +262,23 @@ const PremiumCard = ({ card, globalLogo, isPreview = false, onImagePositionChang
   const safeStartsWith = (str, prefix) => typeof str === 'string' && str.startsWith(prefix);
 
   // Handle local vs remote image vs preview blob
-  const imageUrl = (safeStartsWith(image, 'http') || safeStartsWith(image, 'blob:') || safeStartsWith(image, 'data:'))
+  const safeImageUrl = (safeStartsWith(image, 'http') || safeStartsWith(image, 'blob:') || safeStartsWith(image, 'data:'))
     ? image
     : (image ? `/${image}` : 'https://via.placeholder.com/800x600?text=Upload+Image');
 
-  const logoUrl = globalLogo ? (safeStartsWith(globalLogo, 'http') ? globalLogo : `/${globalLogo}`) : null;
+  // Prevent CORS caching issues on Cloudinary links during download by appending a query string
+  const imageUrl = safeStartsWith(safeImageUrl, 'http') ? `${safeImageUrl}${safeImageUrl.includes('?') ? '&' : '?'}v=${Date.now()}` : safeImageUrl;
+
+  const safeLogoUrl = globalLogo ? (safeStartsWith(globalLogo, 'http') ? globalLogo : `/${globalLogo}`) : null;
+  const logoUrl = safeStartsWith(safeLogoUrl, 'http') ? `${safeLogoUrl}${safeLogoUrl.includes('?') ? '&' : '?'}v=${Date.now()}` : safeLogoUrl;
   
-  const subImageUrl = subImage ? (
+  const safeSubImageUrl = subImage ? (
     (safeStartsWith(subImage, 'http') || safeStartsWith(subImage, 'blob:') || safeStartsWith(subImage, 'data:'))
       ? subImage
       : `/${subImage}`
   ) : null;
+  
+  const subImageUrl = safeStartsWith(safeSubImageUrl, 'http') ? `${safeSubImageUrl}${safeSubImageUrl.includes('?') ? '&' : '?'}v=${Date.now()}` : safeSubImageUrl;
 
   const handleDownload = async () => {
     if (cardRef.current === null) return;
