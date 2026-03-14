@@ -24,6 +24,8 @@ const cardSchema = new mongoose.Schema({
   footerBgColor: { type: String, default: 'transparent' },
   footerContentColor: { type: String, default: '#ffffff' },
   dateBgColor: { type: String, default: '#2ba5bc' },
+  cardBgColor: { type: String, default: '#002d72' },
+  contentVerticalOffset: { type: Number, default: -8 },
   subtitleShowBox: { type: Boolean, default: false },
   subtitleBoxColor: { type: String, default: 'rgba(0,0,0,0.5)' },
   subtitleBoxWidth: { type: Number, default: 100 },

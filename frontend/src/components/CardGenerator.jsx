@@ -227,6 +227,8 @@ const CardGenerator = ({ onCardGenerated, globalLogo }) => {
     data.append('footerBgColor', formData.footerBgColor);
     data.append('footerContentColor', formData.footerContentColor);
     data.append('dateBgColor', formData.dateBgColor);
+    data.append('cardBgColor', formData.cardBgColor);
+    data.append('contentVerticalOffset', formData.contentVerticalOffset);
     data.append('titleFontSize', `${formData.titleFontSize}rem`);
     data.append('titleFontWeight', formData.titleFontWeight);
     data.append('titleFontFamily', formData.titleFontFamily);

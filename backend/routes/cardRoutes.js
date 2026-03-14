@@ -45,6 +45,7 @@ router.post('/', upload.fields([
     const { 
       title, subtitle, date, imagePosition, imageSize, imageFit, imageObjectPosition,
       footerStyle, footerText, footerBgColor, footerContentColor, dateBgColor,
+      cardBgColor, contentVerticalOffset,
       headlineWidth,
       subtitleShowBox, subtitleBoxColor, subtitleBoxWidth,
       extraText, extraTextShow, extraTextBgColor, extraTextWidth,
@@ -87,6 +88,8 @@ router.post('/', upload.fields([
       footerBgColor: footerBgColor || '#f8f107',
       footerContentColor: footerContentColor || '#000000',
       dateBgColor: dateBgColor || '#2ba5bc',
+      cardBgColor: cardBgColor || '#002d72',
+      contentVerticalOffset: parseInt(contentVerticalOffset) || -8,
       headlineWidth: headlineWidth || 50,
       subtitleShowBox: subtitleShowBox === 'true' || subtitleShowBox === true,
       subtitleBoxColor: subtitleBoxColor || 'rgba(0,0,0,0.5)',
